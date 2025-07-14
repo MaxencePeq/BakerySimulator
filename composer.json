@@ -1,0 +1,21 @@
+{
+    "name": "maxence/bakery-simulator",
+    "description": "Petit jeu incrémental",
+    "autoload": {
+        "psr-4": {
+            "Maxence\\BakerySimulator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Pequeno Maxence",
+            "email": "maxence.pequeno@icloud.com"
+        }
+    ],
+    "require": {
+        "ext-pdo": "*"
+    },
+    "scripts": {
+        "start": "bin/run-serveur.sh"
+    }
+}
