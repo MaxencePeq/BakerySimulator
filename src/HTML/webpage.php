@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace html;
+namespace Maxence\BakerySimulator\HTML;
 
 /**
  *
