@@ -24,7 +24,7 @@ if (isset($_POST['faire_pain'])) {
 }
 
 /* Rechargement automatique de la page toutes les 1 seconde */
-    /* Obligatoire pour les autoclickers sans javascript */
+    /* Obligatoire pour les autoclicker sans javascript */
 $webpage->appendToHead('<meta http-equiv="refresh" content="1">');
 
 /* Affichage HTML  */
