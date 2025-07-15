@@ -19,22 +19,30 @@ if (!isset($_SESSION['breadAmount'])) {
 if (!isset($_SESSION['clickMultiplication'])) {
     $_SESSION['clickMultiplication'] = 1;
 }
-
 if (!isset($_SESSION['money'])) {
     $_SESSION['money'] = 0;
+}
+if (!isset($_SESSION['addedAmount'])) {
+    $_SESSION['addedAmount'] = 0;
 }
 /****************************************************/
 
 
 /*  Traitement de l'action  */
 if (isset($_POST['faire_pain'])) {
-    $_SESSION['breadAmount'] += $_SESSION['clickMultiplication'];
+    $_SESSION['breadAmount'] += ( (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication']);
 }
 
 if (isset($_POST['vendre_pain'])) {
     $_SESSION['money'] += $_SESSION['breadAmount'];
     $_SESSION['breadAmount'] = 0;
 }
+
+if (isset($_POST['Acheter_Augment'])) {
+    $_SESSION['money'] -= 300;
+    $_SESSION['addedAmount'] += 1;
+}
+
 /****************************/
 
 
@@ -57,5 +65,13 @@ $webpage->appendContent(<<<HTML
 <p>Pains en stock : {$_SESSION['breadAmount']}</p>
 <p>Argent : {$_SESSION['money']} $</p>
 HTML);
+
+if($_SESSION['money'] > 100) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Acheter_Augment">Ameliorer l'efficacité (300$) </button>
+</form>
+HTML);
+}
 
 echo $webpage->toHtml();
