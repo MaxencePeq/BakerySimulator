@@ -10,6 +10,62 @@ $webpage = new webpage();
 $webpage->setTitle("Ma Boulangerie");
 $webpage->appendCssUrl('http://localhost:8000/css/globalstyle.css');
 
+/* Lancement du debug mode */
+$debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
+
+if ($debugMode) {
+    $webpage->appendContent(<<<HTML
+    <h2>🔧 Debug Mode</h2>
+    <form method="post">
+        <label>Définir l'argent : </label>
+        <input type="number" name="debug_money" step="1">
+        <button type="submit">Set 💰</button>
+    </form>
+
+    <form method="post">
+        <label>Définir les pains : </label>
+        <input type="number" name="debug_bread" step="1">
+        <button type="submit">Set 🥖</button>
+    </form>
+
+    <form method="post">
+        <label>Définir le multiplicateur : </label>
+        <input type="number" name="debug_multi" step="0.1">
+        <button type="submit">Set ✖️</button>
+    </form>
+
+    <form method="post">
+        <label>Définir le bonus par clic : </label>
+        <input type="number" name="debug_bonus" step="1">
+        <button type="submit">Set ➕</button>
+    </form>
+    <form method="post">
+        <button type="submit" name="reset_game">🔄 Réinitialiser la partie</button>
+    </form>
+    <form method="post">
+        <button type="submit" name="ExitDebug"> Quitter le mode debug</button>
+    </form>
+    <hr>
+HTML);
+}
+/***************************/
+
+
+/* Traitement debug mode */
+// Sécuriser les entrées debug
+if (isset($_POST['debug_money'])) {
+    $_SESSION['money'] = max(0, (int) $_POST['debug_money']);
+}
+if (isset($_POST['debug_bread'])) {
+    $_SESSION['breadAmount'] = max(0, (int) $_POST['debug_bread']);
+}
+if (isset($_POST['debug_multi'])) {
+    $_SESSION['clickMultiplication'] = max(1, (float) $_POST['debug_multi']); // min 1
+}
+if (isset($_POST['debug_bonus'])) {
+    $_SESSION['addedAmount'] = max(0, (int) $_POST['debug_bonus']);
+}
+
 
 
 /* Initialisation des variables si première visite  */
@@ -25,23 +81,56 @@ if (!isset($_SESSION['money'])) {
 if (!isset($_SESSION['addedAmount'])) {
     $_SESSION['addedAmount'] = 0;
 }
+if (!isset($_SESSION['breadPrice'])) {
+    $_SESSION['breadPrice'] = 1;
+}
+
+if (!isset($_SESSION['cost_addAmount'])) {
+    $_SESSION['cost_addAmount'] = 150;
+}
+if (!isset($_SESSION['cost_multi'])) {
+    $_SESSION['cost_multi'] = 500;
+}
+
 /****************************************************/
 
 
 /*  Traitement de l'action  */
 if (isset($_POST['faire_pain'])) {
-    $_SESSION['breadAmount'] += ( (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication']);
+    $gain = max(1, round((1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'], 0));
+    $_SESSION['breadAmount'] += $gain;
+
 }
 
 if (isset($_POST['vendre_pain'])) {
-    $_SESSION['money'] += $_SESSION['breadAmount'];
+    $_SESSION['money'] += ($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
     $_SESSION['breadAmount'] = 0;
 }
 
-if (isset($_POST['Acheter_Augment'])) {
-    $_SESSION['money'] -= 300;
+if (isset($_POST['Buy_addAmount']) && $_SESSION['money'] >= $_SESSION['cost_addAmount']) {
+    $_SESSION['money'] -= $_SESSION['cost_addAmount'];
     $_SESSION['addedAmount'] += 1;
+    $_SESSION['cost_addAmount'] = ceil($_SESSION['cost_addAmount'] * 1.15);
 }
+
+
+if (isset($_POST['Buy_Multi']) && $_SESSION['money'] >= $_SESSION['cost_multi']) {
+    $_SESSION['money'] -= $_SESSION['cost_multi'];
+    $_SESSION['clickMultiplication'] += 0.1;
+    $_SESSION['cost_multi'] = ceil($_SESSION['cost_multi'] * 1.15);
+}
+
+
+if (isset($_POST['reset_game'])) {
+    session_destroy();
+    header("Location: " . strtok($_SERVER["REQUEST_URI"], '?')); // Recharge la page sans les paramètres
+    exit;
+}
+if (isset($_POST['ExitDebug'])) {
+    header("Location: http://localhost:8000/basepage.php");
+    exit;
+}
+
 
 /****************************/
 
@@ -49,9 +138,13 @@ if (isset($_POST['Acheter_Augment'])) {
 
 /* Rechargement automatique de la page toutes les 1 seconde */
     /* Obligatoire pour les autoclicker sans javascript */
-$webpage->appendToHead('<meta http-equiv="refresh" content="1">');
+    /* 10 sec en debug mode */
+$refreshTime = $debugMode ? 10 : 2;
+$webpage->appendToHead("<meta http-equiv='refresh' content='{$refreshTime}'>");
 
 
+/* +1 dans les pains pour affichage */
+$addedBreadAmount = $_SESSION['addedAmount'] +1 ;
 
 /* Affichage HTML  */
 $webpage->appendContent(<<<HTML
@@ -62,16 +155,41 @@ $webpage->appendContent(<<<HTML
     <button type="submit" name="vendre_pain">Vendre le pain </button>
 </form>
 
-<p>Pains en stock : {$_SESSION['breadAmount']}</p>
+<p>Pains en stock : {$_SESSION['breadAmount']}</p> 
+<p>Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
+<p>Pains par click : {$addedBreadAmount}</p>
+<p>Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
 <p>Argent : {$_SESSION['money']} $</p>
 HTML);
 
-if($_SESSION['money'] > 100) {
+
+/* Affichage des amélioration */
+if($_SESSION['money'] >= $_SESSION['cost_addAmount']) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Acheter_Augment">Ameliorer l'efficacité (300$) </button>
+    <button type="submit" name="Buy_addAmount">Améliorer l'efficacité ({$_SESSION['cost_addAmount']}$) </button>
 </form>
 HTML);
 }
+
+
+if($_SESSION['money'] >= $_SESSION['cost_multi']) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_Multi">Améliorer le multiplicateur ({$_SESSION['cost_multi']}$) </button>
+</form>
+HTML);
+}
+
+
+
+/******************************/
+
+$webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="reset_game">🔄 Réinitialiser la partie</button>
+</form>
+HTML);
+
 
 echo $webpage->toHtml();
