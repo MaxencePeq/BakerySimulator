@@ -8,14 +8,9 @@ chmod +x bin/run-serveur.sh
 
 doit implementer : 
 
-argent
+Un bouton : suivis des amélioration 
 
-vendre
-
-
-acheter autoclicker
-
-acheter communication pour + 0.5$ par pain
+-> redirige vers une page avec le nom de toutes les améliorations possédés.
 
 
 Gestion de stock 
