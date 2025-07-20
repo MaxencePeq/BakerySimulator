@@ -70,21 +70,24 @@ form button[name^="Buy_"] {
     border-radius: 15px;
     font-weight: bold;
     font-size: 20px;
-    color: white;
+    color: black;
     cursor: pointer;
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }
 
-form button[name="Buy_addAmount"] {
+form button[name="Buy_addAmount1"] {
     background-color: #A76E49;
+    color:white;
 }
 
-form button[name="Buy_Multi"] {
-    background-color: #5E9BAC; /
+form button[name="Buy_Multi1"] {
+    background-color: #5E9BAC;
+    color:white;
 }
 
-form button[name="Buy_AutoClicker"] {
+form button[name="Buy_AutoClicker1"] {
     background-color: #28513B;
+    color:white;
 }
 
 /*** Valeurs des prix (dans les boutons) ***/
