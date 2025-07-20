@@ -95,12 +95,15 @@ if (!isset($_SESSION['lastAutoClickTime'])) {
 
 if (!isset($_SESSION['cost_addAmount1'])) {
     $_SESSION['cost_addAmount1'] = 75;
+    $_SESSION['Bought_cost_addAmount1'] = false;
 }
 if (!isset($_SESSION['cost_multi1'])) {
     $_SESSION['cost_multi1'] = 500;
+    $_SESSION['Bought_cost_multi1'] = false;
 }
 if (!isset($_SESSION['cost_AutoClick1'])) {
     $_SESSION['cost_AutoClick1'] = 125;
+    $_SESSION['Bought_cost_AutoClick1'] = false;
 }
 
 /****************************************************/
@@ -120,12 +123,14 @@ if (isset($_POST['vendre_pain'])) {
 if (isset($_POST['Buy_addAmount1']) && $_SESSION['money'] >= $_SESSION['cost_addAmount1']) {
     $_SESSION['money'] -= $_SESSION['cost_addAmount1'];
     $_SESSION['addedAmount'] += 1;
+    $_SESSION['Bought_cost_addAmount1'] = true;
 }
 
 
 if (isset($_POST['Buy_Multi1']) && $_SESSION['money'] >= $_SESSION['cost_multi1']) {
     $_SESSION['money'] -= $_SESSION['cost_multi1'];
     $_SESSION['clickMultiplication'] += 0.1;
+    $_SESSION['Bought_cost_multi1'] = true;
 }
 
 
@@ -142,6 +147,7 @@ if (isset($_POST['ExitDebug'])) {
 if (isset($_POST['Buy_AutoClicker1']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick1']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoClick1'];
     $_SESSION['autoClickerCount'] += 1;
+    $_SESSION['Bought_cost_AutoClick1'] = true;
 }
 
 /****************************/
@@ -169,7 +175,7 @@ if ($elapsedSeconds > 0 && $_SESSION['autoClickerCount'] > 0) {
 }
 $_SESSION['lastAutoClickTime'] = $currentTime;
 
-/**/
+/***************************************/
 
 
 
@@ -195,7 +201,7 @@ HTML);
 
 /* Affichage des améliorations */
 
-if($_SESSION['money'] >= $_SESSION['cost_addAmount1']) {
+if(($_SESSION['money'] >= $_SESSION['cost_addAmount1']) and $_SESSION['Bought_cost_addAmount1'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_addAmount1" data-price="{$_SESSION['cost_addAmount1']}G">
@@ -205,7 +211,7 @@ if($_SESSION['money'] >= $_SESSION['cost_addAmount1']) {
 HTML);
 }
 
-if($_SESSION['money'] >= $_SESSION['cost_multi1']) {
+if(($_SESSION['money'] >= $_SESSION['cost_multi1']) and $_SESSION['Bought_cost_multi1'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_Multi1" data-price="{$_SESSION['cost_multi1']}G">
@@ -215,7 +221,7 @@ if($_SESSION['money'] >= $_SESSION['cost_multi1']) {
 HTML);
 }
 
-if($_SESSION['money'] >= $_SESSION['cost_AutoClick1']) {
+if(($_SESSION['money'] >= $_SESSION['cost_AutoClick1']) and $_SESSION['Bought_cost_AutoClick1'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_AutoClicker1" data-price="125">
