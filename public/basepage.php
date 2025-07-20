@@ -140,29 +140,34 @@ if (isset($_POST['Buy_AutoClicker'])) {
 
 
 /* Rechargement automatique de la page toutes les 1 seconde */
-    /* Obligatoire pour les autoclicker sans javascript */
-    /* 10 sec en debug mode */
-$refreshTime = $debugMode ? 10 : 2;
+/* Obligatoire pour les autoclicker sans javascript, 300 sec en debug mode */
+$refreshTime = $debugMode ? 300 : 2;
 $webpage->appendToHead("<meta http-equiv='refresh' content='{$refreshTime}'>");
 
 
 /* +1 dans les pains pour affichage */
 $addedBreadAmount = $_SESSION['addedAmount'] +1 ;
 
+
+
+
+
 /* Affichage HTML  */
 $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="faire_pain">Faire un pain 🥖</button>
-</form>
-<form method="post">
-    <button type="submit" name="vendre_pain">Vendre le pain </button>
+<form method="post" class="MakeBread">
+    <button type="submit" name="faire_pain">🥖 Faire un pain </button>
 </form>
 
-<p>Pains en stock : {$_SESSION['breadAmount']}</p> 
-<p>Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
-<p>Pains par click : {$addedBreadAmount}</p>
-<p>Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
-<p>Argent : {$_SESSION['money']} $</p>
+<form method="post" class="SellBread">
+    <button type="submit" name="vendre_pain">Vendre le pain</button>
+</form>
+
+
+<p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
+<p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
+<p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
+<p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
+<p class="stats">💸 Argent : {$_SESSION['money']} $</p>
 HTML);
 
 
@@ -170,7 +175,9 @@ HTML);
 if($_SESSION['money'] >= $_SESSION['cost_addAmount']) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Buy_addAmount">Améliorer l'efficacité ({$_SESSION['cost_addAmount']}$) </button>
+    <button type="submit" name="Buy_addAmount" data-price="{$_SESSION['cost_addAmount']}G">
+        🥖 Améliorer l’efficacité
+    </button>
 </form>
 HTML);
 }
@@ -179,7 +186,9 @@ HTML);
 if($_SESSION['money'] >= $_SESSION['cost_multi']) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Buy_Multi">Améliorer le multiplicateur ({$_SESSION['cost_multi']}$) </button>
+    <button type="submit" name="Buy_Multi" data-price="{$_SESSION['cost_multi']}G">
+        🥖 Améliorer le multiplicateur
+    </button>
 </form>
 HTML);
 }
@@ -190,7 +199,9 @@ HTML);
 if($_SESSION['money'] >= $_SESSION['cost_multi']) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Buy_AutoClicker"> +1 pain par seconde ! </button>
+    <button type="submit" name="Buy_AutoClicker" data-price="???">
+        🥖 +1 pain par seconde !
+    </button>
 </form>
 HTML);
 }
