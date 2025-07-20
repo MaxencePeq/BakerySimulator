@@ -131,6 +131,9 @@ if (isset($_POST['ExitDebug'])) {
     exit;
 }
 
+if (isset($_POST['Buy_AutoClicker'])) {
+ /* a faire */
+}
 
 /****************************/
 
@@ -163,7 +166,7 @@ $webpage->appendContent(<<<HTML
 HTML);
 
 
-/* Affichage des amélioration */
+/* Affichage des premières améliorations */
 if($_SESSION['money'] >= $_SESSION['cost_addAmount']) {
     $webpage->appendContent(<<<HTML
 <form method="post">
@@ -180,16 +183,16 @@ if($_SESSION['money'] >= $_SESSION['cost_multi']) {
 </form>
 HTML);
 }
-
-
-
 /******************************/
 
-$webpage->appendContent(<<<HTML
+/* Fin du début de jeu, mise en place de la partie IDLE */
+
+if($_SESSION['money'] >= $_SESSION['cost_multi']) {
+    $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="reset_game">🔄 Réinitialiser la partie</button>
+    <button type="submit" name="Buy_AutoClicker"> +1 pain par seconde ! </button>
 </form>
 HTML);
-
+}
 
 echo $webpage->toHtml();
