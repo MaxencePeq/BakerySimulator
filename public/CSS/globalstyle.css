@@ -1,5 +1,99 @@
-.header{
+body {
+    max-width: 700px;
+    margin: auto;
+    padding: 1rem;
+    background-color: #FFFAEE;
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+}
+
+/*** Boutons principaux ***/
+.MakeBread, .SellBread {
+    width: 100%;
+    margin: 1rem 0;
+    border-radius: 15px;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+.MakeBread button, .SellBread button {
+    all: unset;
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    background-color: inherit;
+}
+
+.MakeBread {
+    background-color: #2A5058;
+}
+
+.SellBread {
+    background-color: #28513B;
+}
+
+/*** Stats ***/
+.stats {
+    display: flex;
+
+    font-size: 20px;
+    font-weight: 600;
+    color: #4B5C5D;
+    width: 100%;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ccc;
+}
+
+/*** Icônes intégrées aux stats avec emojis ***/
+.stats::before {
+    content: '';
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+/*** Boutons d’amélioration ***/
+form button[name^="Buy_"] {
+    all: unset;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+form button[name="Buy_addAmount"] {
+    background-color: #A76E49;
+}
+
+form button[name="Buy_Multi"] {
+    background-color: #5E9BAC; /
+}
+
+form button[name="Buy_AutoClicker"] {
+    background-color: #28513B;
+}
+
+/*** Valeurs des prix (dans les boutons) ***/
+form button[name^="Buy_"]::after {
+    content: attr(data-price);
+    font-weight: normal;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 0.6rem;
+    border-radius: 10px;
+    margin-left: 1rem;
 }
