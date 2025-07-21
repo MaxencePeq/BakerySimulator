@@ -183,6 +183,10 @@ $_SESSION['money'] = (int) round($_SESSION['money']);
 $_SESSION['breadAmount'] = (int) round($_SESSION['breadAmount']);
 /**********************************************************************/
 
+/* Money espacé de virgules initalisé avant affichage */
+$formattedMoney = number_format($_SESSION['money'], 0, ',', ' ');
+/******************************************************/
+
 /* Affichage HTML  */
 $webpage->appendContent(<<<HTML
 <form method="post" class="MakeBread">
@@ -199,7 +203,7 @@ $webpage->appendContent(<<<HTML
 <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
 <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
 <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
-<p class="stats">💸 Argent : {$_SESSION['money']} $</p>
+<p class="stats">💸 Argent : {$formattedMoney} $</p>
 HTML);
 
 
