@@ -116,7 +116,8 @@ if (isset($_POST['faire_pain'])) {
 }
 
 if (isset($_POST['vendre_pain'])) {
-    $_SESSION['money'] += ($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
+    $gain = round($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
+    $_SESSION['money'] += $gain;
     $_SESSION['breadAmount'] = 0;
 }
 
@@ -171,13 +172,16 @@ $elapsedSeconds = $currentTime - $lastTime;
 
 if ($elapsedSeconds > 0 && $_SESSION['autoClickerCount'] > 0) {
     $autoclickGain = $elapsedSeconds * $_SESSION['autoClickerCount'];
-    $_SESSION['breadAmount'] += $autoclickGain * $_SESSION['clickMultiplication'];
+    $_SESSION['breadAmount'] += round($autoclickGain * $_SESSION['clickMultiplication']);
 }
 $_SESSION['lastAutoClickTime'] = $currentTime;
 
 /***************************************/
 
-
+/* On force le passage en entier pour assurer une valeur non flotante */
+$_SESSION['money'] = (int) round($_SESSION['money']);
+$_SESSION['breadAmount'] = (int) round($_SESSION['breadAmount']);
+/**********************************************************************/
 
 /* Affichage HTML  */
 $webpage->appendContent(<<<HTML
