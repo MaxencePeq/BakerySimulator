@@ -85,7 +85,7 @@ if (!isset($_SESSION['breadPrice'])) {
     $_SESSION['breadPrice'] = 1;
 }
 
-/** autoclick variables */
+/* variables d'autoclick */
 if (!isset($_SESSION['autoClickerCount'])) {
     $_SESSION['autoClickerCount'] = 0;
 }
@@ -97,13 +97,29 @@ if (!isset($_SESSION['cost_addAmount1'])) {
     $_SESSION['cost_addAmount1'] = 75;
     $_SESSION['Bought_cost_addAmount1'] = false;
 }
+if (!isset($_SESSION['cost_addAmount2'])) {
+    $_SESSION['cost_addAmount2'] = 500;
+    $_SESSION['Bought_cost_addAmount2'] = false;
+}
+if (!isset($_SESSION['cost_addAmount3'])) {
+    $_SESSION['cost_addAmount3'] = 1250;
+    $_SESSION['Bought_cost_addAmount3'] = false;
+}
 if (!isset($_SESSION['cost_multi1'])) {
-    $_SESSION['cost_multi1'] = 500;
+    $_SESSION['cost_multi1'] = 1000;
     $_SESSION['Bought_cost_multi1'] = false;
+}
+if (!isset($_SESSION['cost_multi2'])) {
+    $_SESSION['cost_multi2'] = 1500;
+    $_SESSION['Bought_cost_multi2'] = false;
 }
 if (!isset($_SESSION['cost_AutoClick1'])) {
     $_SESSION['cost_AutoClick1'] = 125;
     $_SESSION['Bought_cost_AutoClick1'] = false;
+}
+if (!isset($_SESSION['cost_AutoClick2'])) {
+    $_SESSION['cost_AutoClick2'] = 200;
+    $_SESSION['Bought_cost_AutoClick2'] = false;
 }
 
 /****************************************************/
@@ -126,6 +142,16 @@ if (isset($_POST['Buy_addAmount1']) && $_SESSION['money'] >= $_SESSION['cost_add
     $_SESSION['addedAmount'] += 1;
     $_SESSION['Bought_cost_addAmount1'] = true;
 }
+if (isset($_POST['Buy_addAmount2']) && $_SESSION['money'] >= $_SESSION['cost_addAmount2']) {
+    $_SESSION['money'] -= $_SESSION['cost_addAmount2'];
+    $_SESSION['addedAmount'] += 1;
+    $_SESSION['Bought_cost_addAmount2'] = true;
+}
+if (isset($_POST['Buy_addAmount3']) && $_SESSION['money'] >= $_SESSION['cost_addAmount3']) {
+    $_SESSION['money'] -= $_SESSION['cost_addAmount3'];
+    $_SESSION['addedAmount'] += 3;
+    $_SESSION['Bought_cost_addAmount3'] = true;
+}
 
 
 if (isset($_POST['Buy_Multi1']) && $_SESSION['money'] >= $_SESSION['cost_multi1']) {
@@ -133,7 +159,22 @@ if (isset($_POST['Buy_Multi1']) && $_SESSION['money'] >= $_SESSION['cost_multi1'
     $_SESSION['clickMultiplication'] += 0.1;
     $_SESSION['Bought_cost_multi1'] = true;
 }
+if (isset($_POST['Buy_Multi2']) && $_SESSION['money'] >= $_SESSION['cost_multi2']) {
+    $_SESSION['money'] -= $_SESSION['cost_multi2'];
+    $_SESSION['clickMultiplication'] += 0.1;
+    $_SESSION['Bought_cost_multi2'] = true;
+}
 
+if (isset($_POST['Buy_AutoClicker1']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick1']) {
+    $_SESSION['money'] -= $_SESSION['cost_AutoClick1'];
+    $_SESSION['autoClickerCount'] += 1;
+    $_SESSION['Bought_cost_AutoClick1'] = true;
+}
+if (isset($_POST['Buy_AutoClicker2']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick2']) {
+    $_SESSION['money'] -= $_SESSION['cost_AutoClick2'];
+    $_SESSION['autoClickerCount'] += 3;
+    $_SESSION['Bought_cost_AutoClick2'] = true;
+}
 
 if (isset($_POST['reset_game'])) {
     session_destroy();
@@ -145,11 +186,6 @@ if (isset($_POST['ExitDebug'])) {
     exit;
 }
 
-if (isset($_POST['Buy_AutoClicker1']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick1']) {
-    $_SESSION['money'] -= $_SESSION['cost_AutoClick1'];
-    $_SESSION['autoClickerCount'] += 1;
-    $_SESSION['Bought_cost_AutoClick1'] = true;
-}
 
 /****************************/
 
@@ -171,11 +207,10 @@ $lastTime = $_SESSION['lastAutoClickTime'];
 $elapsedSeconds = $currentTime - $lastTime;
 
 if ($elapsedSeconds > 0 && $_SESSION['autoClickerCount'] > 0) {
-    $autoclickGain = $elapsedSeconds * $_SESSION['autoClickerCount'];
+    $autoclickGain = $elapsedSeconds * $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']);
     $_SESSION['breadAmount'] += round($autoclickGain * $_SESSION['clickMultiplication']);
 }
 $_SESSION['lastAutoClickTime'] = $currentTime;
-
 /***************************************/
 
 /* On force le passage en entier pour assurer une valeur non flotante */
@@ -186,6 +221,10 @@ $_SESSION['breadAmount'] = (int) round($_SESSION['breadAmount']);
 /* Money espacé de virgules initalisé avant affichage */
 $formattedMoney = number_format($_SESSION['money'], 0, ',', ' ');
 /******************************************************/
+
+/* Calcul statique de combien de pain par seconde sont fait */
+$autoBreadPerSecond = round($_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'], 0);
+
 
 /* Affichage HTML  */
 $webpage->appendContent(<<<HTML
@@ -201,10 +240,14 @@ $webpage->appendContent(<<<HTML
 <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
 <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
 <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
+<p class="stats">🥖/💸  Pains par seconde : {$autoBreadPerSecond} </p>
 <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
 <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
 <p class="stats">💸 Argent : {$formattedMoney} $</p>
 HTML);
+
+
+
 
 
 /* Affichage des améliorations */
@@ -212,8 +255,27 @@ HTML);
 if(($_SESSION['money'] >= $_SESSION['cost_addAmount1']) and $_SESSION['Bought_cost_addAmount1'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Buy_addAmount1" data-price="{$_SESSION['cost_addAmount1']}G">
-        🥖 Améliorer l’efficacité
+    <button type="submit" name="Buy_addAmount1" data-price="{$_SESSION['cost_addAmount1']}$">
+        🥖 Nouveau fourneau, améliore l’efficacité : +1 pain par click
+    </button>
+</form> 
+HTML);
+}
+
+if(($_SESSION['money'] >= $_SESSION['cost_addAmount2']) and $_SESSION['Bought_cost_addAmount2'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_addAmount2" data-price="{$_SESSION['cost_addAmount2']}$">
+        🥖 Améliorer encore l’efficacité ! +1 pain par click 
+    </button>
+</form>
+HTML);
+}
+if(($_SESSION['money'] >= $_SESSION['cost_addAmount3']) and $_SESSION['Bought_cost_addAmount3'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_addAmount3" data-price="{$_SESSION['cost_addAmount3']}$">
+        🥖 Améliore ENCORE l’efficacité ! +1 pain par click 
     </button>
 </form>
 HTML);
@@ -222,8 +284,17 @@ HTML);
 if(($_SESSION['money'] >= $_SESSION['cost_multi1']) and $_SESSION['Bought_cost_multi1'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Buy_Multi1" data-price="{$_SESSION['cost_multi1']}G">
-        🥖 Améliorer le multiplicateur
+    <button type="submit" name="Buy_Multi1" data-price="{$_SESSION['cost_multi1']}$">
+        🥖 Améliorer le multiplicateur !
+    </button>
+</form>
+HTML);
+}
+if(($_SESSION['money'] >= $_SESSION['cost_multi2']) and $_SESSION['Bought_cost_multi2'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_Multi2" data-price="{$_SESSION['cost_multi2']}$">
+        🥖 Améliorer encore le multiplicateur !
     </button>
 </form>
 HTML);
@@ -232,8 +303,17 @@ HTML);
 if(($_SESSION['money'] >= $_SESSION['cost_AutoClick1']) and $_SESSION['Bought_cost_AutoClick1'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
-    <button type="submit" name="Buy_AutoClicker1" data-price="125">
-        🥖 +1 pain par seconde !
+    <button type="submit" name="Buy_AutoClicker1" data-price="{$_SESSION['cost_AutoClick1']}$">
+        🥖 Premier employé, +1 autocliker !
+    </button>
+</form>
+HTML);
+}
+if(($_SESSION['money'] >= $_SESSION['cost_AutoClick2']) and $_SESSION['Bought_cost_AutoClick2'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_AutoClicker2" data-price="{$_SESSION['cost_AutoClick2']}$">
+        🥖Nouvel employé (efficace), +3 autocliker !
     </button>
 </form>
 HTML);
