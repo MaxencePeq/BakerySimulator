@@ -72,6 +72,9 @@ if (isset($_POST['debug_bonus'])) {
 if (!isset($_SESSION['breadAmount'])) {
     $_SESSION['breadAmount'] = 0;
 }
+if (!isset($_SESSION['sellingChance'])) {
+    $_SESSION['sellingChance'] = 100;
+}
 if (!isset($_SESSION['clickMultiplication'])) {
     $_SESSION['clickMultiplication'] = 1;
 }
@@ -84,14 +87,14 @@ if (!isset($_SESSION['addedAmount'])) {
 if (!isset($_SESSION['breadPrice'])) {
     $_SESSION['breadPrice'] = 1;
 }
-
 /* variables d'autoclick */
 if (!isset($_SESSION['autoClickerCount'])) {
     $_SESSION['autoClickerCount'] = 0;
 }
 if (!isset($_SESSION['lastAutoClickTime'])) {
     $_SESSION['lastAutoClickTime'] = time();
-} /*********************/
+}
+/*********************/
 
 if (!isset($_SESSION['cost_addAmount1'])) {
     $_SESSION['cost_addAmount1'] = 75;
@@ -113,6 +116,10 @@ if (!isset($_SESSION['cost_multi2'])) {
     $_SESSION['cost_multi2'] = 1500;
     $_SESSION['Bought_cost_multi2'] = false;
 }
+if (!isset($_SESSION['cost_multi3'])) {
+    $_SESSION['cost_multi3'] = 2000;
+    $_SESSION['Bought_cost_multi3'] = false;
+}
 if (!isset($_SESSION['cost_AutoClick1'])) {
     $_SESSION['cost_AutoClick1'] = 125;
     $_SESSION['Bought_cost_AutoClick1'] = false;
@@ -121,7 +128,10 @@ if (!isset($_SESSION['cost_AutoClick2'])) {
     $_SESSION['cost_AutoClick2'] = 200;
     $_SESSION['Bought_cost_AutoClick2'] = false;
 }
-
+if (!isset($_SESSION['cost_UpPrice1'])) {
+    $_SESSION['cost_UpPrice1'] = 2000;
+    $_SESSION['Bought_cost_UpPrice1'] = false;
+}
 /****************************************************/
 
 
@@ -132,11 +142,13 @@ if (isset($_POST['faire_pain'])) {
 }
 
 if (isset($_POST['vendre_pain'])) {
-    $gain = round($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
-    $_SESSION['money'] += $gain;
-    $_SESSION['breadAmount'] = 0;
+    $roll = mt_rand(1, 100);
+    if ($roll <= $_SESSION['sellingChance']) {
+        $gain = round($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
+        $_SESSION['money'] += $gain;
+        $_SESSION['breadAmount'] = 0;
+    }
 }
-
 if (isset($_POST['Buy_addAmount1']) && $_SESSION['money'] >= $_SESSION['cost_addAmount1']) {
     $_SESSION['money'] -= $_SESSION['cost_addAmount1'];
     $_SESSION['addedAmount'] += 1;
@@ -164,6 +176,11 @@ if (isset($_POST['Buy_Multi2']) && $_SESSION['money'] >= $_SESSION['cost_multi2'
     $_SESSION['clickMultiplication'] += 0.1;
     $_SESSION['Bought_cost_multi2'] = true;
 }
+if (isset($_POST['Buy_Multi3']) && $_SESSION['money'] >= $_SESSION['cost_multi3']) {
+    $_SESSION['money'] -= $_SESSION['cost_multi3'];
+    $_SESSION['clickMultiplication'] += 0.3;
+    $_SESSION['Bought_cost_multi3'] = true;
+}
 
 if (isset($_POST['Buy_AutoClicker1']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick1']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoClick1'];
@@ -174,6 +191,12 @@ if (isset($_POST['Buy_AutoClicker2']) && $_SESSION['money'] >= $_SESSION['cost_A
     $_SESSION['money'] -= $_SESSION['cost_AutoClick2'];
     $_SESSION['autoClickerCount'] += 3;
     $_SESSION['Bought_cost_AutoClick2'] = true;
+}
+
+if (isset($_POST['Buy_UpPrice1']) && $_SESSION['money'] >= $_SESSION['cost_UpPrice1']) {
+    $_SESSION['money'] -= $_SESSION['cost_UpPrice1'];
+    $_SESSION['breadPrice'] += 0.5;
+    $_SESSION['Bought_cost_UpPrice1'] = true;
 }
 
 if (isset($_POST['reset_game'])) {
@@ -201,7 +224,7 @@ $webpage->appendToHead("<meta http-equiv='refresh' content='{$refreshTime}'>");
 $addedBreadAmount = $_SESSION['addedAmount'] +1 ;
 
 
-/* Calcul du temps pour les autoclicker */
+/* Calcul du temps pour les autoclicker (!) FAIT A L'AIDE D'IA (!) */
 $currentTime = time();
 $lastTime = $_SESSION['lastAutoClickTime'];
 $elapsedSeconds = $currentTime - $lastTime;
@@ -225,8 +248,31 @@ $formattedMoney = number_format($_SESSION['money'], 0, ',', ' ');
 /* Calcul statique de combien de pain par seconde sont fait */
 $autoBreadPerSecond = round($_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'], 0);
 
+/* Calcul du pain par minutes (!) FAIT A L'AIDE D'IA (!)  */
+$breadPerMinute = $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'] * 60;
+$currentStock = $_SESSION['breadAmount'];
 
-/* Affichage HTML  */
+if ($breadPerMinute == 0) {
+    $_SESSION['sellingChance'] = 100; // Aucun autoclicker = 100%
+} else {
+    $ratio = $currentStock / $breadPerMinute;
+
+    if ($ratio <= 0.5) {
+        $_SESSION['sellingChance'] = 100;
+    } elseif ($ratio <= 1) {
+        // Entre 50% et 100% de stock : descend vers 50%
+        $chance = 100 - (($ratio - 0.5) / 0.5) * 50;
+        $_SESSION['sellingChance'] = round($chance);
+    } else {
+        // Stock > production/minute : chance diminue vers 1%
+        $excessRatio = min(($ratio - 1) / 1, 1);
+        $chance = 50 - $excessRatio * 49; // 50% -> 1%
+        $_SESSION['sellingChance'] = max(1, round($chance));
+    }
+}
+/**********************************/
+
+/* Affichage HTML du jeu (bouton et stats)  */
 $webpage->appendContent(<<<HTML
 <form method="post" class="MakeBread">
     <button type="submit" name="faire_pain">🥖 Faire un pain </button>
@@ -239,14 +285,13 @@ $webpage->appendContent(<<<HTML
 
 <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
 <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
+<p class="stats">🚀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
 <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
 <p class="stats">🥖/💸  Pains par seconde : {$autoBreadPerSecond} </p>
 <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
 <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
 <p class="stats">💸 Argent : {$formattedMoney} $</p>
 HTML);
-
-
 
 
 
@@ -299,6 +344,15 @@ if(($_SESSION['money'] >= $_SESSION['cost_multi2']) and $_SESSION['Bought_cost_m
 </form>
 HTML);
 }
+if(($_SESSION['money'] >= $_SESSION['cost_multi3']) and $_SESSION['Bought_cost_multi3'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_Multi3" data-price="{$_SESSION['cost_multi3']}$">
+        🥖 Améliore ENCORE le multiplicateur ! + 0.3 ! 
+    </button>
+</form>
+HTML);
+}
 
 if(($_SESSION['money'] >= $_SESSION['cost_AutoClick1']) and $_SESSION['Bought_cost_AutoClick1'] === false) {
     $webpage->appendContent(<<<HTML
@@ -316,6 +370,16 @@ if(($_SESSION['money'] >= $_SESSION['cost_AutoClick2']) and $_SESSION['Bought_co
         🥖Nouvel employé (efficace), +3 autocliker !
     </button>
 </form>
+HTML);
+}
+
+if(($_SESSION['money'] >= $_SESSION['cost_UpPrice1']) and $_SESSION['Bought_cost_UpPrice1'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_UpPrice1" data-price="{$_SESSION['cost_UpPrice1']}$">
+        🥖 Votre popularité augmente ! Le pain vaut 1.5$
+    </button>
+</form> 
 HTML);
 }
 
