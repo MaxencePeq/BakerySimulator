@@ -94,6 +94,9 @@ if (!isset($_SESSION['autoClickerCount'])) {
 if (!isset($_SESSION['lastAutoClickTime'])) {
     $_SESSION['lastAutoClickTime'] = time();
 }
+if (!isset($_SESSION['showAugment'])) {
+    $_SESSION['showAugment'] = false;
+}
 /*********************/
 
 
@@ -219,6 +222,13 @@ if (isset($_POST['ExitDebug'])) {
     exit;
 }
 
+if (isset($_POST['AugmentPageButton'])){
+    if($_SESSION['showAugment'] === true){
+        $_SESSION['showAugment'] = false;
+    }else{
+        $_SESSION['showAugment'] = true;
+    }
+}
 
 /****************************/
 
@@ -307,10 +317,12 @@ if ($_SESSION['Bought_cost_AutoSeller1'] === true){
 /* Affichage HTML du jeu (bouton et stats)  */
 $webpage->appendContent(<<<HTML
 <div class="ButtonPlace">
-    <button type="submit" name="AugmentPageButton">📌</button>
+    <form method="post">
+        <button type="submit" name="AugmentPageButton">📌</button>
+    </form>
     <form method="post" class="MakeBread">
-    <button type="submit" name="faire_pain">🥖 Faire un pain </button>
-</form>
+        <button type="submit" name="faire_pain">🥖 Faire un pain </button>
+    </form>
 </div>
 
 <form method="post" class="SellBread">
@@ -332,6 +344,13 @@ $webpage->appendContent(<<<HTML
         </div>
 </div>
 HTML);
+
+/* Affichage HTML des améliorations */
+if($_SESSION['showAugment']){
+    $webpage->appendContent(<<<HTML
+<p>BLABLABLA</p>
+HTML);
+}
 
 
 
