@@ -96,6 +96,8 @@ if (!isset($_SESSION['lastAutoClickTime'])) {
 }
 /*********************/
 
+
+/* Initialisation des couts */
 if (!isset($_SESSION['cost_addAmount1'])) {
     $_SESSION['cost_addAmount1'] = 75;
     $_SESSION['Bought_cost_addAmount1'] = false;
@@ -223,14 +225,14 @@ if (isset($_POST['ExitDebug'])) {
 
 
 /* Rechargement automatique de la page toutes les 1 seconde */
-/* Obligatoire pour les autoclicker sans javascript, 300 sec en debug mode */
-$refreshTime = $debugMode ? 300 : 2;
-$webpage->appendToHead("<meta http-equiv='refresh' content='{$refreshTime}'>");
+/* Obligatoire pour les autoclicker sans javascript, pas de refresh en debug mode  */
+if (!$debugMode) {
+    $webpage->appendToHead("<meta http-equiv='refresh' content='1'>");
+}
 
 
 /* +1 dans les pains pour affichage */
 $addedBreadAmount = $_SESSION['addedAmount'] +1 ;
-
 
 
 /* Calcul du temps pour les autoclicker (!) FAIT A L'AIDE D'IA (!) */
@@ -292,7 +294,7 @@ if ($breadPerMinute == 0) {
 
 
 /* Autoseller fait ici, car besoins de la $_SESSION['sellingChance']  */
-if ($_SESSION['Bought_cost_AutoSeller1'] = true){
+if ($_SESSION['Bought_cost_AutoSeller1'] === true){
     if($_SESSION['sellingChance'] <= 50) {
         $gain = round($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
         $_SESSION['money'] += $gain;
@@ -315,15 +317,16 @@ $webpage->appendContent(<<<HTML
     <button type="submit" name="vendre_pain">Vendre le pain</button>
 </form>
 
-
-<p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
-<p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
-<p class="stats">🚀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
-<p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
-<p class="stats">🥖/💸  Pains par seconde : {$autoBreadPerSecond} </p>
-<p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
-<p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
-<p class="stats">💸 Argent : {$formattedMoney} $</p>
+<div class="StatsOrder">
+    <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
+    <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
+    <p class="stats">🚀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
+    <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
+    <p class="stats">🥖/💸  Pains par seconde : {$autoBreadPerSecond} </p>
+    <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
+    <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
+    <p class="stats">💸 Argent : {$formattedMoney} $</p>
+</div>
 HTML);
 
 
