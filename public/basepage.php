@@ -349,6 +349,7 @@ HTML);
 if($_SESSION['showAugment']){
 
     $webpage->appendContent(<<<HTML
+        <div class="ShowTotalAugment">
         <div class="ShowAddAmountAugment"> 
 HTML);
     if($_SESSION['Bought_cost_addAmount1'] === true){
@@ -402,7 +403,7 @@ HTML);
     }
     if($_SESSION['Bought_cost_AutoClick2'] === true){
             $webpage->appendContent(<<<HTML
-                <h3> Employé lvl 2 : +3 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em></h3>  
+                <h3> Employé lvl 2 : +3 autoclicker  <em>({$_SESSION['cost_AutoClick2']}$)</em></h3>  
     HTML);
     }
     $webpage->appendContent(<<<HTML
@@ -410,7 +411,7 @@ HTML);
 HTML);
 
     $webpage->appendContent(<<<HTML
-        <div class="ShowUpPriceAugment"> 
+        <div class="ShowCostUpAugment"> 
 HTML);
     if($_SESSION['Bought_cost_UpPrice1'] === true){
         $webpage->appendContent(<<<HTML
@@ -430,6 +431,7 @@ HTML);
 HTML);
     }
     $webpage->appendContent(<<<HTML
+        </div>
         </div> 
 HTML);
 }

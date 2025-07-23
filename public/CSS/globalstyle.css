@@ -127,3 +127,18 @@ button[name="AugmentPageButton"] {
     flex-direction: row;
     justify-content: space-around;
 }
+
+
+/* Stylisation des amélioration */
+.ShowTotalAugment{
+    text-align: center;
+}
+
+.ShowAddAmountAugment, .ShowMultiAugment, .ShowAutoClickAugment,.ShowCostUpAugment, .ShowAutoSellerAugment  {
+    font-size: 15px;
+    font-weight: 600;
+    color: #4B5C5D;
+    width: 100%;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #ccc;
+}
