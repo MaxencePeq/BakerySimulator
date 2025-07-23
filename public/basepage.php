@@ -302,7 +302,6 @@ if ($breadPerMinute == 0) {
 /**********************************/
 
 
-
 /* Autoseller fait ici, car besoins de la $_SESSION['sellingChance']  */
 if ($_SESSION['Bought_cost_AutoSeller1'] === true){
     if($_SESSION['sellingChance'] <= 50) {
