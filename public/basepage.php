@@ -347,9 +347,61 @@ HTML);
 
 /* Affichage HTML des améliorations */
 if($_SESSION['showAugment']){
-    $webpage->appendContent(<<<HTML
-<p>BLABLABLA</p>
+
+    if($_SESSION['Bought_cost_addAmount1'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3>Fourneau lvl 1 : +1 pain par click  <em>({$_SESSION['cost_addAmount1']}$)</em></h3>  
 HTML);
+    }
+    if($_SESSION['Bought_cost_addAmount2'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3>Fourneau lvl 2 : +1 pain par click  <em>({$_SESSION['cost_addAmount2']}$)</em></h3>  
+HTML);
+    }
+    if($_SESSION['Bought_cost_addAmount3'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3>Fourneau lvl 3 : +3 pain par click  <em>({$_SESSION['cost_addAmount3']}$)</em></h3>  
+HTML);
+    }
+
+    if($_SESSION['Bought_cost_multi1'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3> Marketing lvl 1 : (+ x0.1)  <em>({$_SESSION['cost_multi1']}$)</em></h3>  
+HTML);
+    }
+    if($_SESSION['Bought_cost_multi2'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3> Marketing lvl 2 : (+ x0.1)  <em>({$_SESSION['cost_multi2']}$)</em></h3>  
+HTML);
+    }
+    if($_SESSION['Bought_cost_multi3'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3> Marketing lvl 3 : (+ x0.3)  <em>({$_SESSION['cost_multi3']}$)</em></h3>  
+HTML);
+    }
+
+    if($_SESSION['Bought_cost_AutoClick1'] === true){
+        $webpage->appendContent(<<<HTML
+            <h3> Employé lvl 1 : +1 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em> </h3>  
+HTML);
+    }
+    if($_SESSION['Bought_cost_AutoClick2'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3> Employé lvl 2 : +3 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em></h3>  
+    HTML);
+    }
+
+    if($_SESSION['Bought_cost_UpPrice1'] === true){
+        $webpage->appendContent(<<<HTML
+                <h3> Votre popularité augmente ! Le pain vaut 1.5$  <em>({$_SESSION['cost_UpPrice1']}$)</em></h3>  
+    HTML);
+    }
+
+    if ($_SESSION['Bought_cost_AutoSeller1'] === true){
+        $webpage->appendContent(<<<HTML
+                <h3>Un vendeur a la caisse ! Vend les pains si chance de vendre < 50%  <em>({$_SESSION['cost_AutoSeller1']}$)</em></h3>
+HTML);
+    }
 }
 
 
@@ -360,17 +412,16 @@ if(($_SESSION['money'] >= $_SESSION['cost_addAmount1']) and $_SESSION['Bought_co
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_addAmount1" data-price="{$_SESSION['cost_addAmount1']}$">
-        🥖 Nouveau fourneau, améliore l’efficacité : +1 pain par click
+        🥖 Fourneau lvl 1 ! améliore l’efficacité : +1 pain par click
     </button>
 </form> 
 HTML);
 }
-
 if(($_SESSION['money'] >= $_SESSION['cost_addAmount2']) and $_SESSION['Bought_cost_addAmount2'] === false) {
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_addAmount2" data-price="{$_SESSION['cost_addAmount2']}$">
-        🥖 Améliorer encore l’efficacité ! +1 pain par click 
+        🥖 Fourneau lvl 2 ! +1 pain par click 
     </button>
 </form>
 HTML);
@@ -379,7 +430,7 @@ if(($_SESSION['money'] >= $_SESSION['cost_addAmount3']) and $_SESSION['Bought_co
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_addAmount3" data-price="{$_SESSION['cost_addAmount3']}$">
-        🥖 Améliore ENCORE l’efficacité ! +1 pain par click 
+        🥖 Fourneau lvl 3 ! +3 pain par click 
     </button>
 </form>
 HTML);
@@ -389,7 +440,7 @@ if(($_SESSION['money'] >= $_SESSION['cost_multi1']) and $_SESSION['Bought_cost_m
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_Multi1" data-price="{$_SESSION['cost_multi1']}$">
-        🥖 Améliorer le multiplicateur !
+        🥖 Marketing lvl 1 : Améliorer le multiplicateur ! (+ x0.1)
     </button>
 </form>
 HTML);
@@ -398,7 +449,7 @@ if(($_SESSION['money'] >= $_SESSION['cost_multi2']) and $_SESSION['Bought_cost_m
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_Multi2" data-price="{$_SESSION['cost_multi2']}$">
-        🥖 Améliorer encore le multiplicateur !
+        🥖 Marketing lvl 2 : (+ x0.1)
     </button>
 </form>
 HTML);
@@ -407,7 +458,7 @@ if(($_SESSION['money'] >= $_SESSION['cost_multi3']) and $_SESSION['Bought_cost_m
     $webpage->appendContent(<<<HTML
 <form method="post">
     <button type="submit" name="Buy_Multi3" data-price="{$_SESSION['cost_multi3']}$">
-        🥖 Améliore ENCORE le multiplicateur ! + 0.3 ! 
+        🥖 Marketing lvl 3 : (+ x0.3) 
     </button>
 </form>
 HTML);
