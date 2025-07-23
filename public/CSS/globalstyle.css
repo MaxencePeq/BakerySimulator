@@ -121,3 +121,8 @@ button[name="AugmentPageButton"] {
     background-color: coral;
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }
+.StatsOrder{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}

@@ -318,14 +318,18 @@ $webpage->appendContent(<<<HTML
 </form>
 
 <div class="StatsOrder">
-    <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
-    <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
-    <p class="stats">🚀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
-    <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
-    <p class="stats">🥖/💸  Pains par seconde : {$autoBreadPerSecond} </p>
-    <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
-    <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
-    <p class="stats">💸 Argent : {$formattedMoney} $</p>
+    <div class="StatsOrderRight">
+        <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
+        <p class="stats">💸 Argent : {$formattedMoney} $</p>
+        <p class="stats">🍀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
+        <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
+    </div>
+    <div class="StatsOrderLeft">
+        <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
+        <p class="stats">💵  Pains par seconde : {$autoBreadPerSecond} </p>
+        <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
+        <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
+        </div>
 </div>
 HTML);
 
