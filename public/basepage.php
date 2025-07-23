@@ -94,10 +94,10 @@ if (!isset($_SESSION['autoClickerCount'])) {
 if (!isset($_SESSION['lastAutoClickTime'])) {
     $_SESSION['lastAutoClickTime'] = time();
 }
+/*********************/
 if (!isset($_SESSION['showAugment'])) {
     $_SESSION['showAugment'] = false;
 }
-/*********************/
 
 
 /* Initialisation des couts */
