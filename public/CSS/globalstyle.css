@@ -29,6 +29,9 @@ body {
     color: white;
     cursor: pointer;
     background-color: inherit;
+    box-sizing: border-box; /* Très important ! */
+    overflow: hidden;
+
 }
 
 .MakeBread {
@@ -99,4 +102,22 @@ form button[name^="Buy_"]::after {
     padding: 0.3rem 0.6rem;
     border-radius: 10px;
     margin-left: 1rem;
+}
+.ButtonPlace{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 10px;
+}
+button[name="AugmentPageButton"] {
+    all: unset;
+    align-items: center;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+    cursor: pointer;
+    background-color: coral;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }

@@ -247,7 +247,7 @@ $_SESSION['lastAutoClickTime'] = $currentTime;
 
 
 
-/* On force le passage en entier pour assurer une valeur non flotante */
+/* On force le passage en entier pour assurer une valeur non flottante */
 $_SESSION['money'] = (int) round($_SESSION['money']);
 $_SESSION['breadAmount'] = (int) round($_SESSION['breadAmount']);
 /**********************************************************************/
@@ -291,7 +291,7 @@ if ($breadPerMinute == 0) {
 
 
 
-/* Autoseller fait ici, car besois de la $_SESSION['sellingChance']  */
+/* Autoseller fait ici, car besoins de la $_SESSION['sellingChance']  */
 if ($_SESSION['Bought_cost_AutoSeller1'] = true){
     if($_SESSION['sellingChance'] <= 50) {
         $gain = round($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
@@ -304,9 +304,12 @@ if ($_SESSION['Bought_cost_AutoSeller1'] = true){
 
 /* Affichage HTML du jeu (bouton et stats)  */
 $webpage->appendContent(<<<HTML
-<form method="post" class="MakeBread">
+<div class="ButtonPlace">
+    <button type="submit" name="AugmentPageButton">📌</button>
+    <form method="post" class="MakeBread">
     <button type="submit" name="faire_pain">🥖 Faire un pain </button>
 </form>
+</div>
 
 <form method="post" class="SellBread">
     <button type="submit" name="vendre_pain">Vendre le pain</button>

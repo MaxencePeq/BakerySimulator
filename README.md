@@ -13,7 +13,7 @@ Un bouton : suivis des amélioration
 -> redirige vers une page avec le nom de toutes les améliorations possédés.
 
 
--> valeur floatante sur le pain et l'argent, demander a GPT pour solutionner le multiplicateur.
+-> valeur flottante sur le pain et l'argent, demander a GPT pour solutionner le multiplicateur.
 
 
 Gestion de stock 
