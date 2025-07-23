@@ -348,6 +348,9 @@ HTML);
 /* Affichage HTML des améliorations */
 if($_SESSION['showAugment']){
 
+    $webpage->appendContent(<<<HTML
+        <div class="ShowAddAmountAugment"> 
+HTML);
     if($_SESSION['Bought_cost_addAmount1'] === true){
         $webpage->appendContent(<<<HTML
             <h3>Fourneau lvl 1 : +1 pain par click  <em>({$_SESSION['cost_addAmount1']}$)</em></h3>  
@@ -363,7 +366,13 @@ HTML);
             <h3>Fourneau lvl 3 : +3 pain par click  <em>({$_SESSION['cost_addAmount3']}$)</em></h3>  
 HTML);
     }
+    $webpage->appendContent(<<<HTML
+        </div> 
+HTML);
 
+    $webpage->appendContent(<<<HTML
+        <div class="ShowMultiAugment"> 
+HTML);
     if($_SESSION['Bought_cost_multi1'] === true){
         $webpage->appendContent(<<<HTML
             <h3> Marketing lvl 1 : (+ x0.1)  <em>({$_SESSION['cost_multi1']}$)</em></h3>  
@@ -379,7 +388,13 @@ HTML);
             <h3> Marketing lvl 3 : (+ x0.3)  <em>({$_SESSION['cost_multi3']}$)</em></h3>  
 HTML);
     }
+    $webpage->appendContent(<<<HTML
+        </div> 
+HTML);
 
+    $webpage->appendContent(<<<HTML
+        <div class="ShowAutoClickAugment"> 
+HTML);
     if($_SESSION['Bought_cost_AutoClick1'] === true){
         $webpage->appendContent(<<<HTML
             <h3> Employé lvl 1 : +1 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em> </h3>  
@@ -390,18 +405,33 @@ HTML);
                 <h3> Employé lvl 2 : +3 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em></h3>  
     HTML);
     }
+    $webpage->appendContent(<<<HTML
+        </div> 
+HTML);
 
+    $webpage->appendContent(<<<HTML
+        <div class="ShowUpPriceAugment"> 
+HTML);
     if($_SESSION['Bought_cost_UpPrice1'] === true){
         $webpage->appendContent(<<<HTML
                 <h3> Votre popularité augmente ! Le pain vaut 1.5$  <em>({$_SESSION['cost_UpPrice1']}$)</em></h3>  
     HTML);
     }
+    $webpage->appendContent(<<<HTML
+        </div> 
+HTML);
 
+    $webpage->appendContent(<<<HTML
+        <div class="ShowAutoSellerAugment"> 
+HTML);
     if ($_SESSION['Bought_cost_AutoSeller1'] === true){
         $webpage->appendContent(<<<HTML
                 <h3>Un vendeur a la caisse ! Vend les pains si chance de vendre < 50%  <em>({$_SESSION['cost_AutoSeller1']}$)</em></h3>
 HTML);
     }
+    $webpage->appendContent(<<<HTML
+        </div> 
+HTML);
 }
 
 
