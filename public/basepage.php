@@ -98,6 +98,9 @@ if (!isset($_SESSION['lastAutoClickTime'])) {
 if (!isset($_SESSION['showAugment'])) {
     $_SESSION['showAugment'] = false;
 }
+if (!isset($_SESSION['showStats'])) {
+    $_SESSION['showStats'] = false;
+}
 
 
 /* Initialisation des couts */
@@ -229,6 +232,13 @@ if (isset($_POST['AugmentPageButton'])){
         $_SESSION['showAugment'] = true;
     }
 }
+if (isset($_POST['StatsPageButton'])){
+    if($_SESSION['showStats'] === true){
+        $_SESSION['showStats'] = false;
+    }else{
+        $_SESSION['showStats'] = true;
+    }
+}
 
 /****************************/
 
@@ -274,13 +284,19 @@ $formattedMoney = number_format($_SESSION['money'], 0, ',', ' ');
 
 /* Calcul statique de combien de pain par seconde sont fait */
 $autoBreadPerSecond = round($_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'], 0);
+$moneyPerSecond = $autoBreadPerSecond * $_SESSION['breadPrice'];
 
 
-
-/* Calcul du pain par minutes (!) FAIT A L'AIDE D'IA (!)  */
+/* Calcul du pain par minutes  */
 $breadPerMinute = $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'] * 60;
 $currentStock = $_SESSION['breadAmount'];
+$moneyPerMinute= $breadPerMinute * $_SESSION['breadPrice'];
 
+/*Calcul du pain + $ par heures*/
+$breadPerHour = $breadPerMinute * 60;
+$moneyPerHour = $breadPerHour * $_SESSION['breadPrice'];
+
+/* Calcul des chances de vente (!) FAIT A L'AIDE D'IA (!) */
 if ($breadPerMinute == 0) {
     $_SESSION['sellingChance'] = 100; // Aucun autoclicker = 100%
 } else {
@@ -324,9 +340,14 @@ $webpage->appendContent(<<<HTML
     </form>
 </div>
 
-<form method="post" class="SellBread">
-    <button type="submit" name="vendre_pain">Vendre le pain</button>
-</form>
+<div class="ButtonPlace2">
+    <form method="post">
+        <button type="submit" name="StatsPageButton">📊</button>
+    </form>
+    <form method="post" class="SellBread">
+        <button type="submit" name="vendre_pain">Vendre le pain</button>
+    </form>
+</div>
 
 <div class="StatsOrder">
     <div class="StatsOrderRight">
@@ -346,6 +367,7 @@ HTML);
 
 /* Affichage HTML des améliorations */
 if($_SESSION['showAugment']){
+    $_SESSION['showStats'] = false;
 
     $webpage->appendContent(<<<HTML
         <div class="ShowTotalAugment">
@@ -432,6 +454,26 @@ HTML);
     $webpage->appendContent(<<<HTML
         </div>
         </div> 
+HTML);
+}
+
+/* Affichage HTML des Stats */
+if($_SESSION['showStats']){
+    $_SESSION['showAugment'] = false;
+
+    $webpage->appendContent(<<<HTML
+<div class="ShowStats">
+<div class="TimeBread">
+    <p class="stats">💵  Pains par seconde : {$autoBreadPerSecond} </p>
+    <p class="stats">📈  Pains par minutes : {$breadPerMinute} </p>
+    <p class="stats">🏦  Pains par heures :  {$breadPerHour} </p>
+</div>
+<div class="TimeMoney">
+    <p class="stats">🌾  $ par seconde : {$moneyPerSecond} </p>
+    <p class="stats">🍞  $ par minutes : {$moneyPerMinute} </p>
+    <p class="stats">🥖  $ par heures :  {$moneyPerHour} </p>
+</div>
+</div>
 HTML);
 }
 
@@ -533,5 +575,6 @@ if(($_SESSION['money'] >= $_SESSION['cost_AutoSeller1']) and $_SESSION['Bought_c
 </form> 
 HTML);
 }
+
 
 echo $webpage->toHtml();

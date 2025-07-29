@@ -103,13 +103,13 @@ form button[name^="Buy_"]::after {
     border-radius: 10px;
     margin-left: 1rem;
 }
-.ButtonPlace{
+.ButtonPlace,.ButtonPlace2{
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
     gap: 10px;
 }
-button[name="AugmentPageButton"] {
+button[name="AugmentPageButton"],button[name="StatsPageButton"] {
     all: unset;
     align-items: center;
     padding: 1rem;
@@ -122,12 +122,11 @@ button[name="AugmentPageButton"] {
     background-color: coral;
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }
-.StatsOrder{
+.StatsOrder, .ShowStats{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
-
 
 /* Stylisation des amélioration */
 .ShowTotalAugment{
