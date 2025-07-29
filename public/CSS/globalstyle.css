@@ -1,11 +1,17 @@
 body {
-    max-width: 700px;
-    margin: auto;
     padding: 1rem;
     background-color: #FFFAEE;
     font-family: 'Segoe UI', sans-serif;
     color: #333;
 }
+
+.page{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1rem;
+}
+
 
 /*** Boutons principaux ***/
 .MakeBread, .SellBread {
@@ -126,6 +132,7 @@ button[name="AugmentPageButton"],button[name="StatsPageButton"] {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    gap: 0.5rem;
 }
 
 /* Stylisation des amélioration */
