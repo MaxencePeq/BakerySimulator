@@ -13,6 +13,11 @@ $webpage->appendCssUrl('http://localhost:8000/css/globalstyle.css');
 /* Lancement du debug mode */
 $debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
 
+function formatWithSpaces(int|float $number): string {
+    return number_format($number, 0, '', ' ');
+}
+
+
 if ($debugMode) {
     $webpage->appendContent(<<<HTML
     <h2>🔧 Debug Mode</h2>
@@ -111,6 +116,13 @@ if (!isset($_SESSION['1KflourPrice'])){
 if (!isset($_SESSION['10KflourPrice'])){
     $_SESSION['1KflourPrice'] = $_SESSION['flourPrice'] * 10000;
 }
+if (!isset($_SESSION['100KflourPrice'])){
+    $_SESSION['100KflourPrice'] = $_SESSION['flourPrice'] * 100000;
+}
+if (!isset($_SESSION['1TflourPrice'])){
+    $_SESSION['1TflourPrice'] = $_SESSION['flourPrice'] * 1000000;
+}
+/***********************/
 
 if (!isset($_SESSION['lastFlourPriceChangeTime'])) {
     $_SESSION['lastFlourPriceChangeTime'] = time();
@@ -290,6 +302,30 @@ if (isset($_POST['100gFlourBuyingButton'])){
         $_SESSION['flourAmount'] += 100;
     }
 }
+if (isset($_POST['1KFlourBuyingButton'])){
+    if($_SESSION['money'] >= $_SESSION['1KflourPrice']){
+        $_SESSION['money'] -= $_SESSION['1KflourPrice'];
+        $_SESSION['flourAmount'] += 1000;
+    }
+}
+if (isset($_POST['10KFlourBuyingButton'])){
+    if($_SESSION['money'] >= $_SESSION['10KflourPrice']){
+        $_SESSION['money'] -= $_SESSION['10KflourPrice'];
+        $_SESSION['flourAmount'] += 10000;
+    }
+}
+if (isset($_POST['100KFlourBuyingButton'])){
+    if($_SESSION['money'] >= $_SESSION['100KflourPrice']){
+        $_SESSION['money'] -= $_SESSION['100KflourPrice'];
+        $_SESSION['flourAmount'] += 100000;
+    }
+}
+if (isset($_POST['1TFlourBuyingButton'])){
+    if($_SESSION['money'] >= $_SESSION['1TflourPrice']){
+        $_SESSION['money'] -= $_SESSION['1TflourPrice'];
+        $_SESSION['flourAmount'] += 1000000;
+    }
+}
 
 /****************************/
 
@@ -324,6 +360,8 @@ if (($currentTime - $_SESSION['lastFlourPriceChangeTime']) >= 3) {
     $_SESSION['100gflourPrice'] = round($_SESSION['flourPrice'] * 100, 1);
     $_SESSION['1KflourPrice'] = round($_SESSION['flourPrice'] * 1000, 1);
     $_SESSION['10KflourPrice'] = round($_SESSION['flourPrice'] * 10000, 1);
+    $_SESSION['100KflourPrice'] = round($_SESSION['flourPrice'] * 100000, 1);
+    $_SESSION['1TflourPrice'] = round($_SESSION['flourPrice'] * 1000000, 1);
 
 }
 
@@ -400,6 +438,12 @@ if ($_SESSION['Bought_cost_AutoSeller1'] === true){
     }
 }
 /*********************************************************************/
+/* Formatage de tous les chiffres avant affichages : */
+$FlourPrice100g = formatWithSpaces($_SESSION['100gflourPrice']);
+$FlourPrice1K = formatWithSpaces($_SESSION['1KflourPrice']);
+$FlourPrice10K = formatWithSpaces($_SESSION['10KflourPrice']);
+$FlourPrice100K = formatWithSpaces($_SESSION['100KflourPrice']);
+$FlourPrice1T = formatWithSpaces($_SESSION['1TflourPrice']);
 
 
 /* Affichage HTML du jeu (bouton et stats)  */
@@ -413,13 +457,19 @@ if($_SESSION['showFlour']){
     <p class="stats">Prix de 1g de farine : {$_SESSION['flourPrice']}</p>
     
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="100gFlourBuyingButton">Acheter 100g de farine ({$_SESSION['100gflourPrice']}$)</button>
+        <button type="submit" name="100gFlourBuyingButton">Acheter 100g de farine ($FlourPrice100g$)</button>
     </form>
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="1KFlourBuyingButton">Acheter 1k de farine ({$_SESSION['1KflourPrice']}$)</button>
+        <button type="submit" name="1KFlourBuyingButton">Acheter 1k de farine ($FlourPrice1K$)</button>
     </form>
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="10KFlourBuyingButton">Acheter 10k de farine ({$_SESSION['10KflourPrice']}$)</button>
+        <button type="submit" name="10KFlourBuyingButton">Acheter 10k de farine ($FlourPrice10K$)</button>
+    </form>
+    <form method="post" class="FlourBuyingButton">
+        <button type="submit" name="100KFlourBuyingButton">Acheter 100k de farine ($FlourPrice100K$)</button>
+    </form>
+    <form method="post" class="FlourBuyingButton">
+        <button type="submit" name="1TFlourBuyingButton">Acheter 1T de farine ($FlourPrice1T$)</button>
     </form>
 </div>
 HTML);
