@@ -98,6 +98,24 @@ if (!isset($_SESSION['addedAmount'])) {
 if (!isset($_SESSION['breadPrice'])) {
     $_SESSION['breadPrice'] = 1;
 }
+/* Prix des g de farine */
+if (!isset($_SESSION['flourPrice'])){
+    $_SESSION['flourPrice'] = 0.1;
+}
+if (!isset($_SESSION['100gflourPrice'])){
+    $_SESSION['100gflourPrice'] = $_SESSION['flourPrice'] * 100;
+}
+if (!isset($_SESSION['1KflourPrice'])){
+    $_SESSION['1KflourPrice'] = $_SESSION['flourPrice'] * 1000;
+}
+if (!isset($_SESSION['10KflourPrice'])){
+    $_SESSION['1KflourPrice'] = $_SESSION['flourPrice'] * 10000;
+}
+
+if (!isset($_SESSION['lastFlourPriceChangeTime'])) {
+    $_SESSION['lastFlourPriceChangeTime'] = time();
+}
+
 /* variables d'autoclick */
 if (!isset($_SESSION['autoClickerCount'])) {
     $_SESSION['autoClickerCount'] = 0;
@@ -112,6 +130,10 @@ if (!isset($_SESSION['showAugment'])) {
 if (!isset($_SESSION['showStats'])) {
     $_SESSION['showStats'] = false;
 }
+if (!isset($_SESSION['showFlour'])) {
+    $_SESSION['showFlour'] = false;
+}
+
 
 
 
@@ -254,6 +276,20 @@ if (isset($_POST['StatsPageButton'])){
         $_SESSION['showStats'] = true;
     }
 }
+if (isset($_POST['FlourPageButton'])){
+    if($_SESSION['showFlour'] === true){
+        $_SESSION['showFlour'] = false;
+    }else{
+        $_SESSION['showFlour'] = true;
+    }
+}
+
+if (isset($_POST['100gFlourBuyingButton'])){
+    if($_SESSION['money'] >= $_SESSION['100gflourPrice']){
+        $_SESSION['money'] -= $_SESSION['100gflourPrice'];
+        $_SESSION['flourAmount'] += 100;
+    }
+}
 
 /****************************/
 
@@ -270,11 +306,28 @@ if (!$debugMode) {
 $addedBreadAmount = $_SESSION['addedAmount'] +1 ;
 
 
-/* Calcul du temps pour les autoclicker (!) FAIT A L'AIDE D'IA (!) */
+/* Calcul du temps (meta refresh + tick) */
 $currentTime = time();
 $lastTime = $_SESSION['lastAutoClickTime'];
 $elapsedSeconds = $currentTime - $lastTime;
 
+$TimeUntilFlourPriceChange = 0;
+$min = 0.5;
+$max = 1.5;
+
+if (($currentTime - $_SESSION['lastFlourPriceChangeTime']) >= 3) {
+    $random = $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    $_SESSION['flourPrice'] = round($random, 1);
+
+    $_SESSION['lastFlourPriceChangeTime'] = $currentTime;
+
+    $_SESSION['100gflourPrice'] = round($_SESSION['flourPrice'] * 100, 1);
+    $_SESSION['1KflourPrice'] = round($_SESSION['flourPrice'] * 1000, 1);
+    $_SESSION['10KflourPrice'] = round($_SESSION['flourPrice'] * 10000, 1);
+
+}
+
+/* Calcul du temps pour les autoclicker (!) FAIT A L'AIDE D'IA (!) */
 if ($elapsedSeconds > 0 && $_SESSION['autoClickerCount'] > 0) {
     $autoclickGain = $elapsedSeconds * $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']);
 
@@ -354,6 +407,23 @@ $webpage->appendContent(<<<HTML
 <div class="page">
 <div class="FirstPagePart">
 HTML);
+if($_SESSION['showFlour']){
+    $webpage->appendContent(<<<HTML
+<div class="FlourPagePart">
+    <p class="stats">Prix de 1g de farine : {$_SESSION['flourPrice']}</p>
+    
+    <form method="post" class="FlourBuyingButton">
+        <button type="submit" name="100gFlourBuyingButton">Acheter 100g de farine ({$_SESSION['100gflourPrice']}$)</button>
+    </form>
+    <form method="post" class="FlourBuyingButton">
+        <button type="submit" name="1KFlourBuyingButton">Acheter 1k de farine ({$_SESSION['1KflourPrice']}$)</button>
+    </form>
+    <form method="post" class="FlourBuyingButton">
+        <button type="submit" name="10KFlourBuyingButton">Acheter 10k de farine ({$_SESSION['10KflourPrice']}$)</button>
+    </form>
+</div>
+HTML);
+}
 if($_SESSION['showStats']){
 
     $webpage->appendContent(<<<HTML
@@ -371,6 +441,8 @@ if($_SESSION['showStats']){
 </div>
 HTML);
 }
+
+
 $webpage->appendContent(<<<HTML
 </div>
 HTML);
@@ -384,6 +456,9 @@ $webpage->appendContent(<<<HTML
     </form>
     <form method="post" class="MakeBread">
         <button type="submit" name="faire_pain">🥖 Faire un pain </button>
+    </form>
+    <form method="post">
+        <button type="submit" name="FlourPageButton">🌾</button>
     </form>
 </div>
 
