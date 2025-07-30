@@ -40,6 +40,11 @@ if ($debugMode) {
         <button type="submit">Set ➕</button>
     </form>
     <form method="post">
+        <label>Définir le montant de farine : </label>
+        <input type="number" name="debug_flour" step="1">
+        <button type="submit">Set ➕</button>
+    </form>
+    <form method="post">
         <button type="submit" name="reset_game">🔄 Réinitialiser la partie</button>
     </form>
     <form method="post">
@@ -65,6 +70,9 @@ if (isset($_POST['debug_multi'])) {
 if (isset($_POST['debug_bonus'])) {
     $_SESSION['addedAmount'] = max(0, (int) $_POST['debug_bonus']);
 }
+if (isset($_POST['debug_flour'])) {
+    $_SESSION['flourAmount'] = max(0, (int) $_POST['debug_flour']);
+}
 
 
 
@@ -80,6 +88,9 @@ if (!isset($_SESSION['clickMultiplication'])) {
 }
 if (!isset($_SESSION['money'])) {
     $_SESSION['money'] = 0;
+}
+if (!isset($_SESSION['flourAmount'])) {
+    $_SESSION['flourAmount'] = 300;
 }
 if (!isset($_SESSION['addedAmount'])) {
     $_SESSION['addedAmount'] = 0;
@@ -101,6 +112,7 @@ if (!isset($_SESSION['showAugment'])) {
 if (!isset($_SESSION['showStats'])) {
     $_SESSION['showStats'] = false;
 }
+
 
 
 /* Initialisation des couts */
@@ -149,10 +161,13 @@ if (!isset($_SESSION['cost_AutoSeller1'])) {
 
 /*  Traitement de l'action  */
 if (isset($_POST['faire_pain'])) {
-    $gain = max(1, round((1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'], 0));
-    $_SESSION['breadAmount'] += $gain;
-}
 
+    if ( $_SESSION['flourAmount'] > (1 + $_SESSION['addedAmount']) ){  // Vérifie que le nombre de pain produit > au nombre de farine en stock
+        $gain = max(1, round((1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'], 0));
+        $_SESSION['breadAmount'] += $gain;
+        $_SESSION['flourAmount'] -= $gain;
+    }
+}
 if (isset($_POST['vendre_pain'])) {
     $roll = mt_rand(1, 100);
     if ($roll <= $_SESSION['sellingChance']) {
@@ -262,7 +277,12 @@ $elapsedSeconds = $currentTime - $lastTime;
 
 if ($elapsedSeconds > 0 && $_SESSION['autoClickerCount'] > 0) {
     $autoclickGain = $elapsedSeconds * $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']);
-    $_SESSION['breadAmount'] += round($autoclickGain * $_SESSION['clickMultiplication']);
+
+    /* Ajout des pains si le montant de farine est >= au gain */
+    if ($_SESSION['flourAmount'] >= $autoclickGain) {
+        $_SESSION['breadAmount'] += round($autoclickGain * $_SESSION['clickMultiplication']);
+        $_SESSION['flourAmount'] -= round($autoclickGain * $_SESSION['clickMultiplication']);
+    }
 }
 $_SESSION['lastAutoClickTime'] = $currentTime;
 /***************************************/
@@ -379,13 +399,13 @@ $webpage->appendContent(<<<HTML
 <div class="StatsOrder">
     <div class="StatsOrderRight">
         <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
+        <p class="stats">🌾 Farine en stock : {$_SESSION['flourAmount']}</p>
         <p class="stats">💸 Argent : {$formattedMoney} $</p>
         <p class="stats">🍀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
-        <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
     </div>
     <div class="StatsOrderLeft">
         <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
-        <p class="stats">💵  Pains par seconde : {$autoBreadPerSecond} </p>
+        <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
         <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
         <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
         </div>
