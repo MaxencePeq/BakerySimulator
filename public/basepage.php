@@ -457,19 +457,19 @@ if($_SESSION['showFlour']){
     <p class="stats">Prix de 1g de farine : {$_SESSION['flourPrice']}</p>
     
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="100gFlourBuyingButton">Acheter 100g de farine ($FlourPrice100g$)</button>
+        <button type="submit" name="100gFlourBuyingButton" data-price="{$FlourPrice100g}$">Acheter 100g de farine</button>
     </form>
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="1KFlourBuyingButton">Acheter 1k de farine ($FlourPrice1K$)</button>
+        <button type="submit" name="1KFlourBuyingButton" data-price="{$FlourPrice1K}$">Acheter 1k de farine </button>
     </form>
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="10KFlourBuyingButton">Acheter 10k de farine ($FlourPrice10K$)</button>
+        <button type="submit" name="10KFlourBuyingButton" data-price="{$FlourPrice10K}$">Acheter 10k de farine </button>
     </form>
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="100KFlourBuyingButton">Acheter 100k de farine ($FlourPrice100K$)</button>
+        <button type="submit" name="100KFlourBuyingButton" data-price="{$FlourPrice100K}$">Acheter 100k de farine </button>
     </form>
     <form method="post" class="FlourBuyingButton">
-        <button type="submit" name="1TFlourBuyingButton">Acheter 1T de farine ($FlourPrice1T$)</button>
+        <button type="submit" name="1TFlourBuyingButton" data-price="{$FlourPrice1T}$">Acheter 1T de farine </button>
     </form>
 </div>
 HTML);

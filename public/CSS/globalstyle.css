@@ -128,7 +128,7 @@ form button[name^="Buy_"]::after {
     align-items: center;
     gap: 10px;
 }
-button[name="AugmentPageButton"],button[name="StatsPageButton"] {
+button[name="AugmentPageButton"],button[name="StatsPageButton"],button[name="FlourPageButton"] {
     all: unset;
     align-items: center;
     padding: 1rem;
@@ -141,6 +141,35 @@ button[name="AugmentPageButton"],button[name="StatsPageButton"] {
     background-color: coral;
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }
+button[name="100gFlourBuyingButton"],button[name="1KFlourBuyingButton"],button[name="10KFlourBuyingButton"],button[name="100KFlourBuyingButton"],button[name="1TFlourBuyingButton"]{
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0.5rem 1rem;
+    padding: 0.4rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    background-color: coral;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    overflow: hidden;
+
+}
+button[name="100gFlourBuyingButton"]::after,button[name="1KFlourBuyingButton"]::after,button[name="10KFlourBuyingButton"]::after,button[name="100KFlourBuyingButton"]::after,button[name="1TFlourBuyingButton"]::after {
+    content: attr(data-price);
+    font-weight: normal;
+    font-size: 13px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 0.6rem;
+    border-radius: 10px;
+    margin-left: 1rem;
+}
+
 .StatsOrder, .ShowStats{
     display: flex;
     flex-direction: row;
