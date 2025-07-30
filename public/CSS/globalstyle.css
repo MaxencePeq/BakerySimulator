@@ -128,7 +128,7 @@ form button[name^="Buy_"]::after {
     align-items: center;
     gap: 10px;
 }
-button[name="AugmentPageButton"],button[name="StatsPageButton"],button[name="FlourPageButton"] {
+button[name="AugmentPageButton"],button[name="StatsPageButton"],button[name="FlourPageButton"], button[name="HelpPageButton"] {
     all: unset;
     align-items: center;
     padding: 1rem;
@@ -181,6 +181,17 @@ button[name="100gFlourBuyingButton"]::after,button[name="1KFlourBuyingButton"]::
 .ShowTotalAugment{
     text-align: center;
 }
+.helpPageText{
+    background-color: #4B5C5D;
+
+    margin-top: 20px;
+    margin-right: 1rem;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    border-radius: 10px;
+    padding: 0.5rem;
+}
 
 .ShowAddAmountAugment, .ShowMultiAugment, .ShowAutoClickAugment,.ShowCostUpAugment, .ShowAutoSellerAugment  {
     font-size: 15px;
@@ -188,5 +199,4 @@ button[name="100gFlourBuyingButton"]::after,button[name="1KFlourBuyingButton"]::
     color: #4B5C5D;
     width: 100%;
     padding: 0.3rem 0;
-    border-bottom: 1px solid #ccc;
 }
