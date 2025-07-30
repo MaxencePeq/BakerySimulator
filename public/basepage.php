@@ -472,7 +472,7 @@ if ($_SESSION['Bought_cost_AutoSeller1'] === true){
 /* Calcul de l'autoFlourBuyer pour la prochaine minutes */
 $elapsedSinceLastBuy = $currentTime - $_SESSION['lastFlourAutoBuyTime'];
 
-if ($elapsedSinceLastBuy >= 60 && $_SESSION['flourPrice'] <= 0.8) {
+if (($elapsedSinceLastBuy >= 60 && $_SESSION['flourPrice'] <= 0.8) and $_SESSION['Bought_cost_AutoSeller1'] === true) {
     // Quantité de farine nécessaire pour 1 minute de production
     $flourNeeded = $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'] * 60;
 
@@ -513,9 +513,6 @@ if($_SESSION['showFlour']){
     $webpage->appendContent(<<<HTML
 <div class="FlourPagePart">
     <p class="stats">Prix de 1g de farine : {$_SESSION['flourPrice']}$</p>
-    <div class="timer">
-        <p>Temps écoulé depuis le dernier achat automatique de farine : {$elapsedSinceLastBuy}</p> 
-    </div>
     
     <form method="post" class="FlourBuyingButton">
         <button type="submit" name="100gFlourBuyingButton" data-price="{$FlourPrice100g}$">Acheter 100g de farine</button>
@@ -535,6 +532,14 @@ if($_SESSION['showFlour']){
 </div>
 HTML);
 }
+if($_SESSION['Bought_cost_AutoSeller1'] === true){
+    $webpage->appendContent(<<<HTML
+<div class="timer">
+    <p>Temps écoulé depuis le dernier achat automatique de farine : {$elapsedSinceLastBuy}</p> 
+</div>
+HTML);
+}
+
 if($_SESSION['showHelpPageButton']){
     $webpage->appendContent(<<<HTML
 <div class="helpPage">
