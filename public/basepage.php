@@ -464,7 +464,7 @@ $FlourPrice10K = formatWithSpaces($_SESSION['10KflourPrice']);
 $FlourPrice100K = formatWithSpaces($_SESSION['100KflourPrice']);
 $FlourPrice1T = formatWithSpaces($_SESSION['1TflourPrice']);
 $EarnedBread = formatWithSpaces($_SESSION['breadAmount']);
-$EarnedFlour = formatWithSpaces($_SESSION['flourPrice']);
+$EarnedFlour = formatWithSpaces($_SESSION['flourAmount']);
 
 
 /* Affichage HTML du jeu (bouton et stats)  */
