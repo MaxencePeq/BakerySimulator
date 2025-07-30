@@ -463,6 +463,8 @@ $FlourPrice1K = formatWithSpaces($_SESSION['1KflourPrice']);
 $FlourPrice10K = formatWithSpaces($_SESSION['10KflourPrice']);
 $FlourPrice100K = formatWithSpaces($_SESSION['100KflourPrice']);
 $FlourPrice1T = formatWithSpaces($_SESSION['1TflourPrice']);
+$EarnedBread = formatWithSpaces($_SESSION['breadAmount']);
+$EarnedFlour = formatWithSpaces($_SESSION['flourPrice']);
 
 
 /* Affichage HTML du jeu (bouton et stats)  */
@@ -540,8 +542,8 @@ $webpage->appendContent(<<<HTML
 
 <div class="StatsOrder">
     <div class="StatsOrderRight">
-        <p class="stats">🥖 Pains en stock : {$_SESSION['breadAmount']}</p> 
-        <p class="stats">🌾 Farine en stock : {$_SESSION['flourAmount']}</p>
+        <p class="stats">🥖 Pains en stock : {$EarnedBread}</p> 
+        <p class="stats">🌾 Farine en stock : {$EarnedFlour}</p>
         <p class="stats">💸 Argent : {$formattedMoney} $</p>
         <p class="stats">🍀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
     </div>
