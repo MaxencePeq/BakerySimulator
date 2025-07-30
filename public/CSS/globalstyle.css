@@ -99,6 +99,19 @@ form button[name="Buy_AutoClicker1"] {
     color:white;
 }
 
+/* Colonnes fixes */
+.FirstPagePart,
+.MiddlePagePart,
+.LastPagePart {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Si rien à afficher à droite, on garde la place mais on cache le contenu */
+.RightPagePart:empty,.FirstPagePart:empty {
+    visibility: hidden;
+}
+
 /*** Valeurs des prix (dans les boutons) ***/
 form button[name^="Buy_"]::after {
     content: attr(data-price);
