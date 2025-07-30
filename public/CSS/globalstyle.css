@@ -193,7 +193,7 @@ button[name="100gFlourBuyingButton"]::after,button[name="1KFlourBuyingButton"]::
     padding: 0.5rem;
 }
 
-.ShowAddAmountAugment, .ShowMultiAugment, .ShowAutoClickAugment,.ShowCostUpAugment, .ShowAutoSellerAugment  {
+.ShowAddAmountAugment, .ShowMultiAugment, .ShowAutoClickAugment,.ShowCostUpAugment, .ShowAutoSellerAugment,.ShowAutoFlourBuyer1Augment  {
     font-size: 15px;
     font-weight: 600;
     color: #4B5C5D;

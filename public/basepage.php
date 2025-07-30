@@ -127,6 +127,9 @@ if (!isset($_SESSION['1TflourPrice'])){
 if (!isset($_SESSION['lastFlourPriceChangeTime'])) {
     $_SESSION['lastFlourPriceChangeTime'] = time();
 }
+if (!isset($_SESSION['lastFlourAutoBuyTime'])) {
+    $_SESSION['lastFlourAutoBuyTime'] = time();
+}
 
 /* variables d'autoclick */
 if (!isset($_SESSION['autoClickerCount'])) {
@@ -192,6 +195,10 @@ if (!isset($_SESSION['cost_UpPrice1'])) {
 if (!isset($_SESSION['cost_AutoSeller1'])) {
     $_SESSION['cost_AutoSeller1'] = 5000;
     $_SESSION['Bought_cost_AutoSeller1'] = false;
+}
+if (!isset($_SESSION['cost_AutoFlourBuyer1'])){
+    $_SESSION['cost_AutoFlourBuyer1'] = 5000;
+    $_SESSION['Bought_cost_AutoFlourBuyer1'] = false;
 }
 
 if(!isset($_SESSION['min'])){
@@ -276,6 +283,10 @@ if (isset($_POST['Buy_UpPrice1']) && $_SESSION['money'] >= $_SESSION['cost_UpPri
 if (isset($_POST['Buy_AutoSeller1']) && $_SESSION['money'] >= $_SESSION['cost_AutoSeller1']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoSeller1'];
     $_SESSION['Bought_cost_AutoSeller1'] = true;
+}
+if (isset($_POST['Buy_AutoFlourBuyer1']) && $_SESSION['money'] >= $_SESSION['cost_AutoFlourBuyer1']) {
+    $_SESSION['money'] -= $_SESSION['cost_AutoFlourBuyer1'];
+    $_SESSION['Bought_cost_AutoFlourBuyer1'] = true;
 }
 
 if (isset($_POST['reset_game'])) {
@@ -457,6 +468,31 @@ if ($_SESSION['Bought_cost_AutoSeller1'] === true){
     }
 }
 /*********************************************************************/
+
+/* Calcul de l'autoFlourBuyer pour la prochaine minutes */
+$elapsedSinceLastBuy = $currentTime - $_SESSION['lastFlourAutoBuyTime'];
+
+if ($elapsedSinceLastBuy >= 60 && $_SESSION['flourPrice'] <= 0.8) {
+    // Quantité de farine nécessaire pour 1 minute de production
+    $flourNeeded = $_SESSION['autoClickerCount'] * (1 + $_SESSION['addedAmount']) * $_SESSION['clickMultiplication'] * 60;
+
+    // Quantité manquante par rapport au stock actuel
+    $missingFlour = max(0, $flourNeeded - $_SESSION['flourAmount']);
+
+    // Coût de la quantité manquante
+    $cost = $missingFlour * $_SESSION['flourPrice'];
+
+    // On achète uniquement si on a l'argent
+    if ($_SESSION['money'] >= $cost) {
+        $_SESSION['money'] -= $cost;
+        $_SESSION['flourAmount'] += floor($missingFlour);
+    }
+
+    $_SESSION['lastFlourAutoBuyTime'] = $currentTime;
+}
+
+
+
 /* Formatage de tous les chiffres avant affichages : */
 $FlourPrice100g = formatWithSpaces($_SESSION['100gflourPrice']);
 $FlourPrice1K = formatWithSpaces($_SESSION['1KflourPrice']);
@@ -477,6 +513,9 @@ if($_SESSION['showFlour']){
     $webpage->appendContent(<<<HTML
 <div class="FlourPagePart">
     <p class="stats">Prix de 1g de farine : {$_SESSION['flourPrice']}$</p>
+    <div class="timer">
+        <p>Temps écoulé depuis le dernier achat automatique de farine : {$elapsedSinceLastBuy}</p> 
+    </div>
     
     <form method="post" class="FlourBuyingButton">
         <button type="submit" name="100gFlourBuyingButton" data-price="{$FlourPrice100g}$">Acheter 100g de farine</button>
@@ -651,6 +690,16 @@ if(($_SESSION['money'] >= ($_SESSION['cost_AutoSeller1']) + $_SESSION['100gflour
 </form> 
 HTML);
 }
+if(($_SESSION['money'] >= ($_SESSION['cost_AutoFlourBuyer1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoFlourBuyer1'] === false) {
+    $webpage->appendContent(<<<HTML
+<form method="post">
+    <button type="submit" name="Buy_AutoFlourBuyer1" data-price="{$_SESSION['cost_AutoFlourBuyer1']}$">
+        🥖 Producteur local ! Achete automatiquement de la farine pour la prochaine minutes de production si le prix de la farine est a prix bas ! 
+    </button>
+</form> 
+HTML);
+}
+
 
 /* Fermeture de la divs de milieu de page */
 $webpage->appendContent(<<<HTML
@@ -764,9 +813,21 @@ HTML);
     }
     $webpage->appendContent(<<<HTML
         </div>
-        </div> 
-    </div>
-    </div>
+HTML);
+
+    $webpage->appendContent(<<<HTML
+        <div class="ShowAutoFlourBuyer1Augment"> 
+HTML);
+    if ($_SESSION['Bought_cost_AutoFlourBuyer1'] === true){
+        $webpage->appendContent(<<<HTML
+                <h3>Producteur local ! Achete automatiquement de la farine pour la prochaine minutes de production si le prix de la farine est a prix bas !   <em>({$_SESSION['cost_AutoFlourBuyer1']}$)</em></h3>
+HTML);
+    }
+    $webpage->appendContent(<<<HTML
+    </div> 
+    </div> 
+</div>
+</div>
 HTML);
 
 }
