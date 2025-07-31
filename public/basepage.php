@@ -149,7 +149,7 @@ if (!isset($_SESSION['showFlour'])) {
     $_SESSION['showFlour'] = false;
 }
 if (!isset($_SESSION['showHelpPageButton'])) {
-    $_SESSION['showHelpPageButton'] = false;
+    $_SESSION['showHelpPageButton'] = true;
 }
 
 
@@ -532,14 +532,16 @@ if($_SESSION['showFlour']){
     </form>
 </div>
 HTML);
-}
-if ($_SESSION['Bought_cost_AutoFlourBuyer1'] === true){
-    $webpage->appendContent(<<<HTML
+    if ($_SESSION['Bought_cost_AutoFlourBuyer1'] === true){
+        $webpage->appendContent(<<<HTML
     <div class="timer">
-        <p>Temps écoulé depuis le dernier achat automatique de farine : {$elapsedSinceLastBuy}s</p> 
+        <p>Temps écoulé depuis le dernier achat <br> automatique de farine : {$elapsedSinceLastBuy}s</p> 
     </div>
 HTML);
+    }
+
 }
+
 
 
 if($_SESSION['showHelpPageButton']){

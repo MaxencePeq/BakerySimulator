@@ -49,7 +49,7 @@ body {
 }
 
 /*** Stats ***/
-.stats {
+.stats, .timer{
     display: flex;
 
     font-size: 20px;
