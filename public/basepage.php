@@ -1,14 +1,25 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+
+
 /* Debut de la session */
 session_start();
+
+// verification de la connexion
+if (!isset($_SESSION['user_id'])) {
+    header('Location: http://localhost:8888/BakerySimulator/public/login.php');
+    exit;
+}
+
 
 use Maxence\BakerySimulator\HTML\webpage;
 
 $webpage = new webpage();
 $webpage->setTitle("Ma Boulangerie");
-$webpage->appendCssUrl('http://localhost:8000/css/globalstyle.css');
+$webpage->appendCssUrl('http://localhost:8888/BakerySimulator/public/css/globalstyle.css');
 
 /* Lancement du debug mode */
 $debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
@@ -295,7 +306,7 @@ if (isset($_POST['reset_game'])) {
     exit;
 }
 if (isset($_POST['ExitDebug'])) {
-    header("Location: http://localhost:8000/basepage.php");
+    header("Location: http://localhost:8888/BakerySimulator/public/basepage.php");
     exit;
 }
 
@@ -601,6 +612,14 @@ $webpage->appendContent(<<<HTML
         <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
         <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
         </div>
+        
+    <form method="post" action="http://localhost:8888/BakerySimulator/public/logout.php">
+        <button type="submit">Déconnexion</button>
+    </form>
+    <form method="post" action="save.php">
+        <button type="submit">Sauvegarder la partie</button>
+    </form>
+
 </div>
 HTML);
 

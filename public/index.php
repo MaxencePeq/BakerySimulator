@@ -15,7 +15,7 @@ $webpage->appendContent(<<<HTML
 </div>
 
 <div class="content">
-    <a class="StartButton" href="http://localhost:8000/basepage.php">
+    <a class="StartButton" href="http://localhost:8888/BakerySimulator/public/basepage.php">
         <button type="button">Commencez</button>
     </a>
 </div>
