@@ -22,3 +22,5 @@ $stmt->execute([
 ]);
 
 echo "Session sauvegardée.";
+header('Location: basepage.php');
+

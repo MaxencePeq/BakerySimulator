@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (strlen($password) < 6) {
             $error = "Le mot de passe doit faire au moins 6 caractères.";
         } else {
-            var_dump(getenv('APP_DIR'));
-            var_dump(realpath('.'));
+            // var_dump(getenv('APP_DIR'));
+            // var_dump(realpath('.'));
 
             $pdo = MyPDO::getInstance();
             $stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username");
