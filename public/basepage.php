@@ -838,7 +838,7 @@ HTML);
     HTML);
         if ($_SESSION['Bought_cost_AutoSeller1'] === true){
             $webpage->appendContent(<<<HTML
-                    <h3>Un vendeur a la caisse ! Vend les pains si chance de vendre < 50%  <em>({$_SESSION['cost_AutoSeller1']}$)</em></h3>
+                    <h3>Un vendeur a la caisse ! Vend tout le pains si la chance de vendre < 50% (Les améliorations type "popularité" n'influenceront pas le vendeur, il vend a 1$ le pain)  <em>({$_SESSION['cost_AutoSeller1']}$)</em></h3>
     HTML);
         }
         $webpage->appendContent(<<<HTML
