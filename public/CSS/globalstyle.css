@@ -130,7 +130,9 @@ form button[name^="Buy_"]::after {
 }
 button[name="AugmentPageButton"],button[name="StatsPageButton"],button[name="FlourPageButton"], button[name="HelpPageButton"] {
     all: unset;
+    display: flex;              /* Ajoute ça */
     align-items: center;
+    justify-content: center;    /* Pour centrer le texte */
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 15px;
@@ -141,7 +143,9 @@ button[name="AugmentPageButton"],button[name="StatsPageButton"],button[name="Flo
     background-color: coral;
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }
-button[name="100gFlourBuyingButton"],button[name="1KFlourBuyingButton"],button[name="10KFlourBuyingButton"],button[name="100KFlourBuyingButton"],button[name="1TFlourBuyingButton"]{
+button[name="100gFlourBuyingButton"],button[name="1KFlourBuyingButton"],button[name="10KFlourBuyingButton"],button[name="100KFlourBuyingButton"],button[name="1TFlourBuyingButton"],
+button[name="LogoutButton"],
+button[name="SaveButton"]{
     all: unset;
     display: flex;
     align-items: center;

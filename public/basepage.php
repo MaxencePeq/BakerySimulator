@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-
-
 /* Debut de la session */
 session_start();
 
@@ -473,7 +471,7 @@ if ($breadPerMinute == 0) {
 /* Autoseller fait ici, car besoins de la $_SESSION['sellingChance']  */
 if ($_SESSION['Bought_cost_AutoSeller1'] === true){
     if($_SESSION['sellingChance'] <= 50) {
-        $gain = round($_SESSION['breadAmount'] * $_SESSION['breadPrice']);
+        $gain = round($_SESSION['breadAmount']);
         $_SESSION['money'] += $gain;
         $_SESSION['breadAmount'] = 0;
     }
@@ -554,310 +552,314 @@ HTML);
 }
 
 
-
-if($_SESSION['showHelpPageButton']){
-    $webpage->appendContent(<<<HTML
-<div class="helpPage">
-    <p class="helpPageText">Bienvenue sur la page d'aide !</p>
-    <p class="helpPageText"><em><u>La vente </em></u>: Vous avez 100% de chances de vendre avant l'achat d'autoclicker. Ensuite, les chances diminuent, donc pensez à vendre. <br> Si c'est le vendeur qui vend, vous ne bénéficiez pas des bonus de popularité (augmentation du prix unitaire du pain)</p>
-    <p class="helpPageText"><em><u>La farine</em></u> : Le prix oscille entre 0,10$ et 0,50$ au départ. Il évolue en fonction des niveaux de fourneau !</p>
-    <p class="helpPageText"><em><u>Les améliorations</em></u> : Une amélioration apparaît si vous avez l'argent pour l’acheter et l'argent pour acheter 100 g de farine.</p>
-    <p class="helpPageText"><em><u>Les autoclickers</em></u> : Ils cliquent à votre place et prennent en compte tous vos bonus de clic et de multiplicateur.</p>
-</div>
-HTML);
-}
-
-
-$webpage->appendContent(<<<HTML
-</div>
-HTML);
-
-$webpage->appendContent(<<<HTML
-<div class="MiddlePagePart">
-
-<div class="ButtonPlace">
-    <form method="post">
-        <button type="submit" name="StatsPageButton">📊</button>
-    </form>
-    <form method="post" class="MakeBread">
-        <button type="submit" name="faire_pain">🥖 Faire un pain </button>
-    </form>
-    <form method="post">
-        <button type="submit" name="FlourPageButton">🌾</button>
-    </form>
-</div>
-
-<div class="ButtonPlace2">
-    <form method="post">
-        <button type="submit" name="AugmentPageButton">📌</button>
-    </form>
-    <form method="post" class="SellBread">
-        <button type="submit" name="vendre_pain">Vendre le pain</button>
-    </form>
-    <form method="post">
-        <button type="submit" name="HelpPageButton">💡</button>
-    </form>
-</div>
-
-<div class="StatsOrder">
-    <div class="StatsOrderRight">
-        <p class="stats">🥖 Pains en stock : {$EarnedBread}</p> 
-        <p class="stats">🌾 Farine en stock : {$EarnedFlour}</p>
-        <p class="stats">💸 Argent : {$formattedMoney} $</p>
-        <p class="stats">🍀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
+    if($_SESSION['showHelpPageButton']){
+        $webpage->appendContent(<<<HTML
+    <div class="helpPage">
+        <p class="helpPageText">Bienvenue sur la page d'aide !</p>
+        <p class="helpPageText"><em><u>La vente </em></u>: Vous avez 100% de chances de vendre avant l'achat d'autoclicker. Ensuite, les chances diminuent, donc pensez à vendre. <br> Si c'est le vendeur qui vend, vous ne bénéficiez pas des bonus de popularité (augmentation du prix unitaire du pain)</p>
+        <p class="helpPageText"><em><u>La farine</em></u> : Le prix oscille entre 0,10$ et 0,50$ au départ. Il évolue en fonction des niveaux de fourneau !</p>
+        <p class="helpPageText"><em><u>Les améliorations</em></u> : Une amélioration apparaît si vous avez l'argent pour l’acheter et l'argent pour acheter 100 g de farine.</p>
+        <p class="helpPageText"><em><u>Les autoclickers</em></u> : Ils cliquent à votre place et prennent en compte tous vos bonus de clic et de multiplicateur.</p>
     </div>
-    <div class="StatsOrderLeft">
-        <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
-        <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
-        <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
-        <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
-        </div>
-        
-    <form method="post" action="http://localhost:8888/BakerySimulator/public/logout.php">
-        <button type="submit">Déconnexion</button>
-    </form>
-    <form method="post" action="save.php">
-        <button type="submit">Sauvegarder la partie</button>
-    </form>
-
-</div>
-HTML);
-
-/* Affichage des améliorations */
-if(($_SESSION['money'] >= ($_SESSION['cost_addAmount1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount1'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_addAmount1" data-price="{$_SESSION['cost_addAmount1']}$">
-        🥖 Fourneau lvl 1 ! améliore l’efficacité : +1 pain par click
-    </button>
-</form> 
-HTML);
-}
-if(($_SESSION['money'] >= ($_SESSION['cost_addAmount2']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount2'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_addAmount2" data-price="{$_SESSION['cost_addAmount2']}$">
-        🥖 Fourneau lvl 2 ! +1 pain par click (légère augmentation du prix de la farine...)
-    </button>
-</form>
-HTML);
-}
-if(($_SESSION['money'] >= ($_SESSION['cost_addAmount3']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount3'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_addAmount3" data-price="{$_SESSION['cost_addAmount3']}$">
-        🥖 Fourneau lvl 3 ! +3 pain par click (Encore légère augmentation du prix de la farine...)
-    </button>
-</form>
-HTML);
-}
-
-if(($_SESSION['money'] >= ($_SESSION['cost_multi1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_multi1'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_Multi1" data-price="{$_SESSION['cost_multi1']}$">
-        🥖 Marketing lvl 1 : Améliorer le multiplicateur ! (+ x0.1)
-    </button>
-</form>
-HTML);
-}
-if(($_SESSION['money'] >= ($_SESSION['cost_multi2']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_multi2'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_Multi2" data-price="{$_SESSION['cost_multi2']}$">
-        🥖 Marketing lvl 2 : (+ x0.1)
-    </button>
-</form>
-HTML);
-}
-if(($_SESSION['money'] >= ($_SESSION['cost_multi3']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_multi3'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_Multi3" data-price="{$_SESSION['cost_multi3']}$">
-        🥖 Marketing lvl 3 : (+ x0.3) 
-    </button>
-</form>
-HTML);
-}
-
-if(($_SESSION['money'] >= ($_SESSION['cost_AutoClick1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoClick1'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_AutoClicker1" data-price="{$_SESSION['cost_AutoClick1']}$">
-        🥖 Premier employé, +1 autocliker !
-    </button>
-</form>
-HTML);
-}
-if(($_SESSION['money'] >= ($_SESSION['cost_AutoClick2']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoClick2'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_AutoClicker2" data-price="{$_SESSION['cost_AutoClick2']}$">
-        🥖Nouvel employé (efficace), +3 autocliker !
-    </button>
-</form>
-HTML);
-}
-
-if(($_SESSION['money'] >= ($_SESSION['cost_UpPrice1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_UpPrice1'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_UpPrice1" data-price="{$_SESSION['cost_UpPrice1']}$">
-        🥖 Votre popularité augmente ! Le pain vaut 1.5$
-    </button>
-</form> 
-HTML);
-}
-
-if(($_SESSION['money'] >= ($_SESSION['cost_AutoSeller1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoSeller1'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_AutoSeller1" data-price="{$_SESSION['cost_AutoSeller1']}$">
-        🥖 Un vendeur a la caisse ! Vend tout le pains si la chance de vendre < 50%
-    </button>
-</form> 
-HTML);
-}
-if(($_SESSION['money'] >= ($_SESSION['cost_AutoFlourBuyer1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoFlourBuyer1'] === false) {
-    $webpage->appendContent(<<<HTML
-<form method="post">
-    <button type="submit" name="Buy_AutoFlourBuyer1" data-price="{$_SESSION['cost_AutoFlourBuyer1']}$">
-        🥖 Producteur local ! Achete automatiquement de la farine pour la prochaine minutes de production si le prix de la farine est a prix bas ! 
-    </button>
-</form> 
-HTML);
-}
-
-
-/* Fermeture de la divs de milieu de page */
-$webpage->appendContent(<<<HTML
-</div>
-HTML
-);
-
-$webpage->appendContent(<<<HTML
-<div class="LastPagePart">
-HTML);
-if($_SESSION['showStats']){
-
-    $webpage->appendContent(<<<HTML
-<div class="ShowStats">
-    <div class="TimeBread">
-        <p class="stats">💵  Pains par seconde : {$autoBreadPerSecond} </p>
-        <p class="stats">📈  Pains par minutes : {$breadPerMinute} </p>
-        <p class="stats">🏦  Pains par heures :  {$breadPerHour} </p>
-    </div>
-    <div class="TimeMoney">
-        <p class="stats">🌾  $ par seconde : {$moneyPerSecond} </p>
-        <p class="stats">🍞  $ par minutes : {$moneyPerMinute} </p>
-        <p class="stats">🥖  $ par heures :  {$moneyPerHour} </p>
-    </div>
-</div>
-HTML);
-}
-if($_SESSION['showAugment']){;
-
-    $webpage->appendContent(<<<HTML
-        <div class="ShowTotalAugment">
-        <div class="ShowAddAmountAugment"> 
-HTML);
-    if($_SESSION['Bought_cost_addAmount1'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3>Fourneau lvl 1 : +1 pain par click  <em>({$_SESSION['cost_addAmount1']}$)</em></h3>  
-HTML);
-    }
-    if($_SESSION['Bought_cost_addAmount2'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3>Fourneau lvl 2 : +1 pain par click  <em>({$_SESSION['cost_addAmount2']}$)</em></h3>  
-HTML);
-    }
-    if($_SESSION['Bought_cost_addAmount3'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3>Fourneau lvl 3 : +3 pain par click  <em>({$_SESSION['cost_addAmount3']}$)</em></h3>  
-HTML);
-    }
-    $webpage->appendContent(<<<HTML
-        </div> 
-HTML);
-
-    $webpage->appendContent(<<<HTML
-        <div class="ShowMultiAugment"> 
-HTML);
-    if($_SESSION['Bought_cost_multi1'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3> Marketing lvl 1 : (+ x0.1)  <em>({$_SESSION['cost_multi1']}$)</em></h3>  
-HTML);
-    }
-    if($_SESSION['Bought_cost_multi2'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3> Marketing lvl 2 : (+ x0.1)  <em>({$_SESSION['cost_multi2']}$)</em></h3>  
-HTML);
-    }
-    if($_SESSION['Bought_cost_multi3'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3> Marketing lvl 3 : (+ x0.3)  <em>({$_SESSION['cost_multi3']}$)</em></h3>  
-HTML);
-    }
-    $webpage->appendContent(<<<HTML
-        </div> 
-HTML);
-
-    $webpage->appendContent(<<<HTML
-        <div class="ShowAutoClickAugment"> 
-HTML);
-    if($_SESSION['Bought_cost_AutoClick1'] === true){
-        $webpage->appendContent(<<<HTML
-            <h3> Employé lvl 1 : +1 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em> </h3>  
-HTML);
-    }
-    if($_SESSION['Bought_cost_AutoClick2'] === true){
-        $webpage->appendContent(<<<HTML
-                <h3> Employé lvl 2 : +3 autoclicker  <em>({$_SESSION['cost_AutoClick2']}$)</em></h3>  
     HTML);
     }
-    $webpage->appendContent(<<<HTML
-        </div> 
-HTML);
+
 
     $webpage->appendContent(<<<HTML
-        <div class="ShowCostUpAugment"> 
-HTML);
-    if($_SESSION['Bought_cost_UpPrice1'] === true){
+    </div>
+    HTML);
+
+    $webpage->appendContent(<<<HTML
+    <div class="MiddlePagePart">
+    
+    <div class="ButtonPlace">
+        <form method="post">
+            <button type="submit" name="StatsPageButton">📊</button>
+        </form>
+        <form method="post" class="MakeBread">
+            <button type="submit" name="faire_pain">🥖 Faire un pain </button>
+        </form>
+        <form method="post">
+            <button type="submit" name="FlourPageButton">🌾</button>
+        </form>
+    </div>
+    
+    <div class="ButtonPlace2">
+        <form method="post">
+            <button type="submit" name="AugmentPageButton">📌</button>
+        </form>
+        <form method="post" class="SellBread">
+            <button type="submit" name="vendre_pain">Vendre le pain</button>
+        </form>
+        <form method="post">
+            <button type="submit" name="HelpPageButton">💡</button>
+        </form>
+    </div>
+    
+    <div class="StatsOrder">
+        <div class="StatsOrderRight">
+            <p class="stats">🥖 Pains en stock : {$EarnedBread}</p> 
+            <p class="stats">🌾 Farine en stock : {$EarnedFlour}</p>
+            <p class="stats">💸 Argent : {$formattedMoney} $</p>
+            <p class="stats">🍀 Chance de vente : {$_SESSION['sellingChance']}%</p> 
+        </div>
+        <div class="StatsOrderLeft">
+            <p class="stats">💸 Prix unitaire du pain : {$_SESSION['breadPrice']}</p>
+            <p class="stats">👆🏻 Pains par click : {$addedBreadAmount}</p>
+            <p class="stats">🚀 Multiplicateur : x{$_SESSION['clickMultiplication']}</p>
+            <p class="stats">🤖 Autoclickers : {$_SESSION['autoClickerCount']}</p>
+        </div>
+    
+    </div>
+    HTML);
+
+    /* Affichage des améliorations */
+    if(($_SESSION['money'] >= ($_SESSION['cost_addAmount1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount1'] === false) {
         $webpage->appendContent(<<<HTML
-                <h3> Votre popularité augmente ! Le pain vaut 1.5$  <em>({$_SESSION['cost_UpPrice1']}$)</em></h3>  
+    <form method="post">
+        <button type="submit" name="Buy_addAmount1" data-price="{$_SESSION['cost_addAmount1']}$">
+            🥖 Fourneau lvl 1 ! améliore l’efficacité : +1 pain par click
+        </button>
+    </form> 
     HTML);
     }
-    $webpage->appendContent(<<<HTML
-        </div> 
-HTML);
+    if(($_SESSION['money'] >= ($_SESSION['cost_addAmount2']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount2'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_addAmount2" data-price="{$_SESSION['cost_addAmount2']}$">
+            🥖 Fourneau lvl 2 ! +1 pain par click (légère augmentation du prix de la farine...)
+        </button>
+    </form>
+    HTML);
+    }
+    if(($_SESSION['money'] >= ($_SESSION['cost_addAmount3']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount3'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_addAmount3" data-price="{$_SESSION['cost_addAmount3']}$">
+            🥖 Fourneau lvl 3 ! +3 pain par click (Encore légère augmentation du prix de la farine...)
+        </button>
+    </form>
+    HTML);
+    }
+
+    if(($_SESSION['money'] >= ($_SESSION['cost_multi1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_multi1'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_Multi1" data-price="{$_SESSION['cost_multi1']}$">
+            🥖 Marketing lvl 1 : Améliorer le multiplicateur ! (+ x0.1)
+        </button>
+    </form>
+    HTML);
+    }
+    if(($_SESSION['money'] >= ($_SESSION['cost_multi2']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_multi2'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_Multi2" data-price="{$_SESSION['cost_multi2']}$">
+            🥖 Marketing lvl 2 : (+ x0.1)
+        </button>
+    </form>
+    HTML);
+    }
+    if(($_SESSION['money'] >= ($_SESSION['cost_multi3']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_multi3'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_Multi3" data-price="{$_SESSION['cost_multi3']}$">
+            🥖 Marketing lvl 3 : (+ x0.3) 
+        </button>
+    </form>
+    HTML);
+    }
+
+    if(($_SESSION['money'] >= ($_SESSION['cost_AutoClick1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoClick1'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_AutoClicker1" data-price="{$_SESSION['cost_AutoClick1']}$">
+            🥖 Premier employé, +1 autocliker !
+        </button>
+    </form>
+    HTML);
+    }
+    if(($_SESSION['money'] >= ($_SESSION['cost_AutoClick2']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoClick2'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_AutoClicker2" data-price="{$_SESSION['cost_AutoClick2']}$">
+            🥖Nouvel employé (efficace), +3 autocliker !
+        </button>
+    </form>
+    HTML);
+    }
+
+    if(($_SESSION['money'] >= ($_SESSION['cost_UpPrice1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_UpPrice1'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_UpPrice1" data-price="{$_SESSION['cost_UpPrice1']}$">
+            🥖 Votre popularité augmente ! Le pain vaut 1.5$
+        </button>
+    </form> 
+    HTML);
+    }
+
+    if(($_SESSION['money'] >= ($_SESSION['cost_AutoSeller1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoSeller1'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_AutoSeller1" data-price="{$_SESSION['cost_AutoSeller1']}$">
+            🥖 Un vendeur a la caisse ! Vend tout le pains si la chance de vendre < 50% (Les améliorations type "popularité" n'influenceront pas le vendeur, il vend a 1$ le pain)
+        </button>
+    </form> 
+    HTML);
+    }
+    if(($_SESSION['money'] >= ($_SESSION['cost_AutoFlourBuyer1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_AutoFlourBuyer1'] === false) {
+        $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_AutoFlourBuyer1" data-price="{$_SESSION['cost_AutoFlourBuyer1']}$">
+            🥖 Producteur local ! Achete automatiquement de la farine pour la prochaine minutes de production si le prix de la farine est a prix bas ! 
+        </button>
+    </form> 
+    HTML);
+    }
 
     $webpage->appendContent(<<<HTML
-        <div class="ShowAutoSellerAugment"> 
-HTML);
-    if ($_SESSION['Bought_cost_AutoSeller1'] === true){
-        $webpage->appendContent(<<<HTML
-                <h3>Un vendeur a la caisse ! Vend les pains si chance de vendre < 50%  <em>({$_SESSION['cost_AutoSeller1']}$)</em></h3>
-HTML);
-    }
+    <div class="SaveAndConnectButton">
+            <form method="post" action="http://localhost:8888/BakerySimulator/public/logout.php">
+                <button type="submit" name="LogoutButton">Déconnexion</button>
+            </form>
+            <form method="post" action="save.php">
+                <button type="submit" name="SaveButton">Sauvegarder la partie</button>
+            </form>
+    </div>
+    HTML);
+
+    /* Fermeture de la divs de milieu de page */
     $webpage->appendContent(<<<HTML
+    </div>
+    HTML
+    );
+
+
+
+    $webpage->appendContent(<<<HTML
+    <div class="LastPagePart">
+    HTML);
+    if($_SESSION['showStats']){
+
+        $webpage->appendContent(<<<HTML
+    <div class="ShowStats">
+        <div class="TimeBread">
+            <p class="stats">💵  Pains par seconde : {$autoBreadPerSecond} </p>
+            <p class="stats">📈  Pains par minutes : {$breadPerMinute} </p>
+            <p class="stats">🏦  Pains par heures :  {$breadPerHour} </p>
         </div>
-HTML);
-
-    $webpage->appendContent(<<<HTML
-        <div class="ShowAutoFlourBuyer1Augment"> 
-HTML);
-    if ($_SESSION['Bought_cost_AutoFlourBuyer1'] === true){
-        $webpage->appendContent(<<<HTML
-                <h3>Producteur local ! Achete automatiquement de la farine pour la prochaine minutes de production si le prix de la farine est a prix bas !   <em>({$_SESSION['cost_AutoFlourBuyer1']}$)</em></h3>
-HTML);
+        <div class="TimeMoney">
+            <p class="stats">🌾  $ par seconde : {$moneyPerSecond} </p>
+            <p class="stats">🍞  $ par minutes : {$moneyPerMinute} </p>
+            <p class="stats">🥖  $ par heures :  {$moneyPerHour} </p>
+        </div>
+    </div>
+    HTML);
     }
-    $webpage->appendContent(<<<HTML
-    </div> 
-    </div> 
-</div>
-</div>
-HTML);
+    if($_SESSION['showAugment']){;
 
-}
+        $webpage->appendContent(<<<HTML
+            <div class="ShowTotalAugment">
+            <div class="ShowAddAmountAugment"> 
+    HTML);
+        if($_SESSION['Bought_cost_addAmount1'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3>Fourneau lvl 1 : +1 pain par click  <em>({$_SESSION['cost_addAmount1']}$)</em></h3>  
+    HTML);
+        }
+        if($_SESSION['Bought_cost_addAmount2'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3>Fourneau lvl 2 : +1 pain par click  <em>({$_SESSION['cost_addAmount2']}$)</em></h3>  
+    HTML);
+        }
+        if($_SESSION['Bought_cost_addAmount3'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3>Fourneau lvl 3 : +3 pain par click  <em>({$_SESSION['cost_addAmount3']}$)</em></h3>  
+    HTML);
+        }
+        $webpage->appendContent(<<<HTML
+            </div> 
+    HTML);
 
-echo $webpage->toHtml();
+        $webpage->appendContent(<<<HTML
+            <div class="ShowMultiAugment"> 
+    HTML);
+        if($_SESSION['Bought_cost_multi1'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3> Marketing lvl 1 : (+ x0.1)  <em>({$_SESSION['cost_multi1']}$)</em></h3>  
+    HTML);
+        }
+        if($_SESSION['Bought_cost_multi2'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3> Marketing lvl 2 : (+ x0.1)  <em>({$_SESSION['cost_multi2']}$)</em></h3>  
+    HTML);
+        }
+        if($_SESSION['Bought_cost_multi3'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3> Marketing lvl 3 : (+ x0.3)  <em>({$_SESSION['cost_multi3']}$)</em></h3>  
+    HTML);
+        }
+        $webpage->appendContent(<<<HTML
+            </div> 
+    HTML);
+
+        $webpage->appendContent(<<<HTML
+            <div class="ShowAutoClickAugment"> 
+    HTML);
+        if($_SESSION['Bought_cost_AutoClick1'] === true){
+            $webpage->appendContent(<<<HTML
+                <h3> Employé lvl 1 : +1 autoclicker  <em>({$_SESSION['cost_AutoClick1']}$)</em> </h3>  
+    HTML);
+        }
+        if($_SESSION['Bought_cost_AutoClick2'] === true){
+            $webpage->appendContent(<<<HTML
+                    <h3> Employé lvl 2 : +3 autoclicker  <em>({$_SESSION['cost_AutoClick2']}$)</em></h3>  
+        HTML);
+        }
+        $webpage->appendContent(<<<HTML
+            </div> 
+    HTML);
+
+        $webpage->appendContent(<<<HTML
+            <div class="ShowCostUpAugment"> 
+    HTML);
+        if($_SESSION['Bought_cost_UpPrice1'] === true){
+            $webpage->appendContent(<<<HTML
+                    <h3> Votre popularité augmente ! Le pain vaut 1.5$  <em>({$_SESSION['cost_UpPrice1']}$)</em></h3>  
+        HTML);
+        }
+        $webpage->appendContent(<<<HTML
+            </div> 
+    HTML);
+
+        $webpage->appendContent(<<<HTML
+            <div class="ShowAutoSellerAugment"> 
+    HTML);
+        if ($_SESSION['Bought_cost_AutoSeller1'] === true){
+            $webpage->appendContent(<<<HTML
+                    <h3>Un vendeur a la caisse ! Vend les pains si chance de vendre < 50%  <em>({$_SESSION['cost_AutoSeller1']}$)</em></h3>
+    HTML);
+        }
+        $webpage->appendContent(<<<HTML
+            </div>
+    HTML);
+
+        $webpage->appendContent(<<<HTML
+            <div class="ShowAutoFlourBuyer1Augment"> 
+    HTML);
+        if ($_SESSION['Bought_cost_AutoFlourBuyer1'] === true){
+            $webpage->appendContent(<<<HTML
+                    <h3>Producteur local ! Achete automatiquement de la farine pour la prochaine minutes de production si le prix de la farine est a prix bas !   <em>({$_SESSION['cost_AutoFlourBuyer1']}$)</em></h3>
+    HTML);
+        }
+        $webpage->appendContent(<<<HTML
+        </div> 
+        </div> 
+    </div>
+    </div>
+    HTML);
+
+    }
+
+    echo $webpage->toHtml();
