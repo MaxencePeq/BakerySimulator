@@ -252,8 +252,6 @@ if (isset($_POST['Buy_addAmount3']) && $_SESSION['money'] >= $_SESSION['cost_add
     $_SESSION['money'] -= $_SESSION['cost_addAmount3'];
     $_SESSION['addedAmount'] += 3;
     $_SESSION['Bought_cost_addAmount3'] = true;
-    $_SESSION['min'] = 0.6;
-    $_SESSION['max'] = 1.5;
 }
 
 if (isset($_POST['Buy_Multi1']) && $_SESSION['money'] >= $_SESSION['cost_multi1']) {
@@ -390,6 +388,7 @@ $elapsedSeconds = $currentTime - $lastTime;
 
 $TimeUntilFlourPriceChange = 0;
 
+/* Calcul du changement de prix de la farine toute les 3secs */
 if (($currentTime - $_SESSION['lastFlourPriceChangeTime']) >= 3) {
     $random = $_SESSION['min'] + mt_rand() / mt_getrandmax() * ($_SESSION['max'] - $_SESSION['min']);
     $_SESSION['flourPrice'] = round($random, 1);
@@ -500,7 +499,14 @@ if (($elapsedSinceLastBuy >= 30 && $_SESSION['flourPrice'] <= 0.8) && $_SESSION[
 
     $_SESSION['lastFlourAutoBuyTime'] = $currentTime;
 }
+/*******************************************************/
 
+
+/* Calcul du changement de prix de la farine une fois le fourneau lvl 3 acheté */
+if(($_SESSION['Bought_cost_addAmount3'] = true) and ($_SESSION['Bought_cost_UpPrice1'] = true)){
+    $_SESSION['min'] = 0.6;
+    $_SESSION['max'] = 1.5;
+}
 
 
 /* Formatage de tous les chiffres avant affichages : */

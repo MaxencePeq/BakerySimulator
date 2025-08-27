@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+/*  /!/ Cette Page est ENTIEREMENT faite avec IA /!/  */
+
 require_once __DIR__ . '/../vendor/autoload.php';
 use Maxence\BakerySimulator\Database\MyPdo;
 
