@@ -91,6 +91,9 @@ if (isset($_POST['debug_flour'])) {
 
 
 /* Initialisation des variables si première visite  */
+if (!isset($_SESSION['prestige'])) {
+    $_SESSION['prestige'] = 0;
+}
 if (!isset($_SESSION['breadAmount'])) {
     $_SESSION['breadAmount'] = 0;
 }
@@ -112,6 +115,7 @@ if (!isset($_SESSION['addedAmount'])) {
 if (!isset($_SESSION['breadPrice'])) {
     $_SESSION['breadPrice'] = 1;
 }
+
 /* Prix des g de farine */
 if (!isset($_SESSION['flourPrice'])){
     $_SESSION['flourPrice'] = 0.1;
@@ -160,6 +164,9 @@ if (!isset($_SESSION['showFlour'])) {
 if (!isset($_SESSION['showHelpPageButton'])) {
     $_SESSION['showHelpPageButton'] = true;
 }
+if (!isset($_SESSION['showPrestigeAugmentCounter'])) {
+    $_SESSION['showPrestigeAugmentCounter'] = 0;
+}
 
 
 
@@ -178,11 +185,11 @@ if (!isset($_SESSION['cost_addAmount3'])) {
     $_SESSION['Bought_cost_addAmount3'] = false;
 }
 if (!isset($_SESSION['cost_multi1'])) {
-    $_SESSION['cost_multi1'] = 1000;
+    $_SESSION['cost_multi1'] = 700;
     $_SESSION['Bought_cost_multi1'] = false;
 }
 if (!isset($_SESSION['cost_multi2'])) {
-    $_SESSION['cost_multi2'] = 1500;
+    $_SESSION['cost_multi2'] = 1000;
     $_SESSION['Bought_cost_multi2'] = false;
 }
 if (!isset($_SESSION['cost_multi3'])) {
@@ -209,6 +216,11 @@ if (!isset($_SESSION['cost_AutoFlourBuyer1'])){
     $_SESSION['cost_AutoFlourBuyer1'] = 5000;
     $_SESSION['Bought_cost_AutoFlourBuyer1'] = false;
 }
+if (!isset($_SESSION['cost_Prestige1'])){
+    $_SESSION['cost_Prestige1'] = 10000;
+}
+
+
 
 if(!isset($_SESSION['min'])){
     $_SESSION['min'] =0.1;
@@ -236,10 +248,12 @@ if (isset($_POST['vendre_pain'])) {
         $_SESSION['breadAmount'] = 0;
     }
 }
+
 if (isset($_POST['Buy_addAmount1']) && $_SESSION['money'] >= $_SESSION['cost_addAmount1']) {
     $_SESSION['money'] -= $_SESSION['cost_addAmount1'];
     $_SESSION['addedAmount'] += 1;
     $_SESSION['Bought_cost_addAmount1'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 if (isset($_POST['Buy_addAmount2']) && $_SESSION['money'] >= $_SESSION['cost_addAmount2']) {
     $_SESSION['money'] -= $_SESSION['cost_addAmount2'];
@@ -247,54 +261,75 @@ if (isset($_POST['Buy_addAmount2']) && $_SESSION['money'] >= $_SESSION['cost_add
     $_SESSION['Bought_cost_addAmount2'] = true;
     $_SESSION['min'] = 0.3;
     $_SESSION['max'] = 1;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 if (isset($_POST['Buy_addAmount3']) && $_SESSION['money'] >= $_SESSION['cost_addAmount3']) {
     $_SESSION['money'] -= $_SESSION['cost_addAmount3'];
     $_SESSION['addedAmount'] += 3;
     $_SESSION['Bought_cost_addAmount3'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 
 if (isset($_POST['Buy_Multi1']) && $_SESSION['money'] >= $_SESSION['cost_multi1']) {
     $_SESSION['money'] -= $_SESSION['cost_multi1'];
     $_SESSION['clickMultiplication'] += 0.1;
     $_SESSION['Bought_cost_multi1'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 if (isset($_POST['Buy_Multi2']) && $_SESSION['money'] >= $_SESSION['cost_multi2']) {
     $_SESSION['money'] -= $_SESSION['cost_multi2'];
     $_SESSION['clickMultiplication'] += 0.1;
     $_SESSION['Bought_cost_multi2'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 if (isset($_POST['Buy_Multi3']) && $_SESSION['money'] >= $_SESSION['cost_multi3']) {
     $_SESSION['money'] -= $_SESSION['cost_multi3'];
     $_SESSION['clickMultiplication'] += 0.3;
     $_SESSION['Bought_cost_multi3'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 
 if (isset($_POST['Buy_AutoClicker1']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick1']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoClick1'];
     $_SESSION['autoClickerCount'] += 1;
     $_SESSION['Bought_cost_AutoClick1'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 if (isset($_POST['Buy_AutoClicker2']) && $_SESSION['money'] >= $_SESSION['cost_AutoClick2']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoClick2'];
     $_SESSION['autoClickerCount'] += 3;
     $_SESSION['Bought_cost_AutoClick2'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 
 if (isset($_POST['Buy_UpPrice1']) && $_SESSION['money'] >= $_SESSION['cost_UpPrice1']) {
     $_SESSION['money'] -= $_SESSION['cost_UpPrice1'];
     $_SESSION['breadPrice'] += 0.5;
     $_SESSION['Bought_cost_UpPrice1'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 
 if (isset($_POST['Buy_AutoSeller1']) && $_SESSION['money'] >= $_SESSION['cost_AutoSeller1']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoSeller1'];
     $_SESSION['Bought_cost_AutoSeller1'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
 if (isset($_POST['Buy_AutoFlourBuyer1']) && $_SESSION['money'] >= $_SESSION['cost_AutoFlourBuyer1']) {
     $_SESSION['money'] -= $_SESSION['cost_AutoFlourBuyer1'];
     $_SESSION['Bought_cost_AutoFlourBuyer1'] = true;
+    $_SESSION['showPrestigeAugmentCounter'] += 1;
 }
+
+if (isset($_POST['Buy_Prestige1']) && $_SESSION['money'] >= $_SESSION['cost_Prestige1']) {
+    $_SESSION['money'] -= $_SESSION['cost_Prestige1'];
+    $_SESSION['prestige'] += 1;
+
+    /* a suivre */
+
+
+
+}
+
 
 if (isset($_POST['reset_game'])) {
     session_destroy();
@@ -503,7 +538,7 @@ if (($elapsedSinceLastBuy >= 30 && $_SESSION['flourPrice'] <= 0.8) && $_SESSION[
 
 
 /* Calcul du changement de prix de la farine une fois le fourneau lvl 3 acheté */
-if(($_SESSION['Bought_cost_addAmount3'] = true) and ($_SESSION['Bought_cost_UpPrice1'] = true)){
+if($_SESSION['Bought_cost_addAmount3'] and $_SESSION['Bought_cost_UpPrice1']){
     $_SESSION['min'] = 0.6;
     $_SESSION['max'] = 1.5;
 }
@@ -724,6 +759,17 @@ HTML);
     HTML);
     }
 
+    if($_SESSION['showPrestigeAugmentCounter'] == 11 ){
+    $webpage->appendContent(<<<HTML
+    <form method="post">
+        <button type="submit" name="Buy_Prestige1" data-price="{$_SESSION['cost_Prestige1']}$">
+            Prestige lvl 1 : Réinitialise votre partie, recommencez avec le pain valant 1.3$ DIR-EC-TE-MENT !! De nouvelles augmentations jouable seront proposé ! Montez en prestige ! 
+        </button>
+    </form> 
+    HTML);
+    }
+
+
     $webpage->appendContent(<<<HTML
     <div class="SaveAndConnectButton">
             <form method="post" action="http://localhost:8888/BakerySimulator/public/logout.php">
@@ -861,11 +907,11 @@ HTML);
         }
         $webpage->appendContent(<<<HTML
         </div> 
-        </div> 
+        </div>
     </div>
     </div>
     HTML);
 
     }
-
-    echo $webpage->toHtml();
+echo $webpage->toHtml();
+   
