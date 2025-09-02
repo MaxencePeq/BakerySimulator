@@ -332,9 +332,9 @@ if (isset($_POST['Buy_Prestige1']) && $_SESSION['money'] >= $_SESSION['cost_Pres
 
 
 if (isset($_POST['reset_game'])) {
-    session_destroy();
-    header("Location: " . strtok($_SERVER["REQUEST_URI"], '?')); // Recharge la page sans les paramètres
+    header('Location: reset.php');
     exit;
+
 }
 if (isset($_POST['ExitDebug'])) {
     header("Location: http://localhost:8888/BakerySimulator/public/basepage.php");
