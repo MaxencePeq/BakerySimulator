@@ -325,7 +325,8 @@ if (isset($_POST['Buy_Prestige1']) && $_SESSION['money'] >= $_SESSION['cost_Pres
     $_SESSION['prestige'] += 1;
 
     /* a suivre */
-
+    header('Location: prestige1.php');
+    /* */
 
 
 }
@@ -655,6 +656,7 @@ HTML);
     HTML);
 
     /* Affichage des améliorations */
+
     if(($_SESSION['money'] >= ($_SESSION['cost_addAmount1']) + $_SESSION['100gflourPrice']) and $_SESSION['Bought_cost_addAmount1'] === false) {
         $webpage->appendContent(<<<HTML
     <form method="post">
@@ -763,7 +765,7 @@ HTML);
     $webpage->appendContent(<<<HTML
     <form method="post">
         <button type="submit" name="Buy_Prestige1" data-price="{$_SESSION['cost_Prestige1']}$">
-            Prestige lvl 1 : Réinitialise votre partie, recommencez avec le pain valant 1.3$ DIR-EC-TE-MENT !! De nouvelles augmentations jouable seront proposé ! Montez en prestige ! 
+            Prestige lvl 1 : Réinitialise votre partie, recommencez avec le pain valant 1.5$ DIR-EC-TE-MENT !! De nouvelles augmentations jouable seront proposé ! Montez en prestige ! 
         </button>
     </form> 
     HTML);
@@ -815,6 +817,17 @@ HTML);
             <div class="ShowTotalAugment">
             <div class="ShowAddAmountAugment"> 
     HTML);
+
+        $webpage->appendContent(<<<HTML
+            <div class="ShowPrestigeNumber"> 
+    HTML);
+            $webpage->appendContent(<<<HTML
+                <h3>Niveau de prestige : {$_SESSION['prestige']} </h3>  
+    HTML);
+        $webpage->appendContent(<<<HTML
+            </div> 
+    HTML);
+
         if($_SESSION['Bought_cost_addAmount1'] === true){
             $webpage->appendContent(<<<HTML
                 <h3>Fourneau lvl 1 : +1 pain par click  <em>({$_SESSION['cost_addAmount1']}$)</em></h3>  
