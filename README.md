@@ -1,6 +1,6 @@
 # 🍞 Bakery Simulator
 
-**Lien du jeu → [bakerysimulator.alwaysdata.net](https://bakerysimulator.alwaysdata.net)**
+**Lien du jeu → [bakerysimulator.alwaysdata.net](https://bakerysimulator.alwaysdata.net)** (! BETA !)
 
 Bakery Simulator est un **jeu incremental / autoclicker** développé en **PHP natif**, avec un système de connexion et de sauvegarde persistante.  
 Le joueur incarne un boulanger qui doit produire de la farine, fabriquer du pain et améliorer sa boulangerie pour générer toujours plus de revenus.  
