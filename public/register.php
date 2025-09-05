@@ -7,7 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Maxence\BakerySimulator\Database\MyPdo;
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: http://localhost:8888/BakerySimulator/public/basepage.php'); // Déjà connecté
+    header('Location: basepage.php'); // Déjà connecté
     exit;
 }
 

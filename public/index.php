@@ -7,7 +7,7 @@ use Maxence\BakerySimulator\HTML\webpage;
 
 $webpage = new webpage();
 $webpage->setTitle("Bakery Simulator");
-$webpage->appendCssUrl('http://localhost:8000/css/globalstyle.css');
+$webpage->appendCssUrl('css/globalstyle.css');
 
 $webpage->appendContent(<<<HTML
 <div class="header">
@@ -15,7 +15,7 @@ $webpage->appendContent(<<<HTML
 </div>
 
 <div class="content">
-    <a class="StartButton" href="http://localhost:8888/BakerySimulator/public/basepage.php">
+    <a class="StartButton" href="basepage.php">
         <button type="button">Commencez</button>
     </a>
 </div>
